@@ -1,0 +1,2541 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<script src="../js/mui.min.js"></script>
+		<style>
+			body {
+				background-color: #F3F3F3;
+			}
+			
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+				color: #12B482;
+			}
+			
+			.mui-slider .mui-segmented-control.mui-segmented-control-inverted~.mui-slider-group .mui-slider-item {
+				border-top: 0px;
+				border-bottom: 0px;
+			}
+			
+			.mui-segmented-control .mui-control-item {
+				line-height: 32px;
+			}
+			
+			#envCon /deep/ .van-tabs__wrap--scrollable .van-tab {
+				flex: 0 0 25%;
+			}
+			
+			#envCon /deep/ .van-tab {
+				flex-basis: 20% !important;
+			}
+			
+			#envCon /deep/ .van-tabs__nav {
+				background-color: #E6E6E4;
+			}
+			
+			#envCon /deep/ .van-tab {
+				font-size: 15px;
+				color: black;
+				line-height: 35px;
+			}
+			
+			#envCon /deep/ .van-tab--active {
+				color: #12B482;
+			}
+			
+			#envCon /deep/ .van-tabs__line {
+				background-color: #12B482;
+			}
+			
+			#envCon /deep/ .van-popup {
+				max-height: 45% !important;
+			}
+			
+			#envCon /deep/ .van-tabs--line .van-tabs__wrap {
+				height: 35px;
+			}
+			
+			#envCon /deep/ .van-tabs__content--animated {
+				height: 92%;
+			}
+			
+			.title {
+				width: 100%;
+				text-align: center;
+				height: 50px;
+				line-height: 50px;
+				font-size: 25px;
+				color: #636363;
+				margin-top: 10px;
+				position: relative;
+			}
+			
+			.chartAll {
+				height: 300px;
+				padding: 0px;
+			}
+			
+			.mui-btn-block {
+				margin-bottom: 0px;
+				padding: 8px;
+				padding-left: 43%;
+				font-size: 16px;
+			}
+			
+			#triangle-down {
+				width: 0;
+				height: 0;
+				border-left: 5px solid transparent;
+				border-right: 5px solid transparent;
+				border-top: 5px solid black;
+				position: absolute;
+				top: 15px;
+				left: 70%;
+			}
+			
+			#triangle-downs {
+				width: 0;
+				height: 0;
+				border-left: 5px solid transparent;
+				border-right: 5px solid transparent;
+				border-top: 5px solid black;
+				position: absolute;
+				top: 17.5px;
+				left: 70%;
+			}
+			
+			.mui-btn-blue {
+				border: 1px solid #12B482;
+				background-color: #12B482;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="envCon">
+			<span style="line-height: 40px;font-size: 14px;position: absolute;left: 20px;z-index: 5;">时间:</span>
+			<select class="mui-btn mui-btn-block" id="selectType" @change="changeType" style="font-size: 14px;">
+				<option value="item-3">当 天</option>
+				<option value="item-2">近7天</option>
+				<option value="item-1">近30天</option>
+			</select>
+			<div id="triangle-down"></div>
+			<!--<van-dropdown-menu catchtouchmove="ture" style="height: 42px;">
+				<span style="line-height: 45px;font-size: 14px;position: absolute;left: 20px">当前基地:</span>
+				<van-dropdown-item v-model="value1" :options="option1" @change="changes" @open="isopen" @close="isclose" />
+			</van-dropdown-menu>-->
+			<div style="height: 42px;background: white;width: 100%;text-align: center;position: relative;" id="showUserPicker">
+				<span style="line-height: 45px;font-size: 14px;position: absolute;left: 20px">当前基地:</span>
+				<span id="baseName" style="line-height: 45px;font-size: 14px;"></span>
+				<div id="triangle-downs"></div>
+			</div>
+			<van-tabs v-model="active" :line-width="70" :line-height="2" animated swipeable @change="changeVan">
+				<van-tab title="大气温度">
+					<div class="title">
+						<span>大气温度</span><span style="font-size: 13px;display: inline-block;margin-left: 10px;">(单位:°C)</span><img src="../img/envControl06.png" style="position: absolute;right: 30px;bottom: 5px;" />
+					</div>
+					<div class="chartAll" id="chart06" style="width: 100px"></div>
+				</van-tab>
+				<van-tab title="大气湿度">
+					<div class="title">
+						<span>大气湿度</span><span style="font-size: 13px;display: inline-block;margin-left: 10px;">(单位:%)</span><img src="../img/envControl07.png" style="position: absolute;right: 30px;bottom: 5px;" />
+					</div>
+					<div class="chartAll" id="chart07" style="width: 100px"></div>
+				</van-tab>
+				<van-tab title="土壤温度">
+					<div class="title">
+						<span>土壤温度</span><span style="font-size: 13px;display: inline-block;margin-left: 10px;">(单位:°C)</span><img src="../img/envControl01.png" style="position: absolute;right: 30px;bottom: 5px;" />
+					</div>
+					<div class="chartAll" id="chart01" style="width: 100px"></div>
+				</van-tab>
+				<van-tab title="土壤湿度">
+					<div class="title">
+						<span>土壤湿度</span><span style="font-size: 13px;display: inline-block;margin-left: 10px;">(单位:%)</span><img src="../img/envControl02.png" style="position: absolute;right: 30px;bottom: 5px;" />
+					</div>
+					<div class="chartAll" id="chart02" style="width: 100px"></div>
+				</van-tab>
+				<van-tab title="光照强度">
+					<div class="title">
+						<span>光照强度</span><span style="font-size: 13px;display: inline-block;margin-left: 10px;">(单位:Lux)</span><img src="../img/envControl03.png" style="position: absolute;right: 30px;bottom: 5px;" />
+					</div>
+					<div class="chartAll" id="chart03" style="width: 100px"></div>
+				</van-tab>
+				<van-tab title="降雨量">
+					<div class="title">
+						<span>降雨量</span><span style="font-size: 13px;display: inline-block;margin-left: 10px;">(单位:mm)</span><img src="../img/envControl04.png" style="position: absolute;right: 30px;bottom: 5px;" />
+					</div>
+					<div class="chartAll" id="chart04" style="width: 100px"></div>
+				</van-tab>
+				<van-tab title="土壤ph值">
+					<div class="title">
+						<span>土壤ph值</span><img src="../img/envControl05.png" style="position: absolute;right: 30px;bottom: 5px;" />
+					</div>
+					<div class="chartAll" id="chart05" style="width: 100px"></div>
+				</van-tab>
+				<van-tab title="风速">
+					<div class="title">
+						<span>风速</span><span style="font-size: 13px;display: inline-block;margin-left: 10px;">(单位:m/s)</span><img src="../img/envControl08.png" style="position: absolute;right: 30px;bottom: 5px;" />
+					</div>
+					<div class="chartAll" id="chart08" style="width: 100px"></div>
+				</van-tab>
+			</van-tabs>
+		</div>
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.1/lib/index.css">
+
+		<!-- 引入组件 -->
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vant@2.1/lib/vant.min.js"></script>
+		<script type="text/javascript" src="../js/index.js"></script>
+		<script type="text/javascript" src="../js/libs/echarts-all.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script type="text/javascript" src="../js/libs/mui.picker.min.js"></script>
+		<script type="text/javascript">
+			mui.init({});
+			var Vue = window.Vue;
+			var vant = window.vant;
+			var baseId = "";
+			// 注册 Lazyload 组件
+			Vue.use(vant.Lazyload).use(vant.DropdownMenu).use(vant.DropdownItem);
+			// 调用函数式组件
+			var envCon = new Vue({
+				el: '#envCon',
+				data: {
+					baseOrder: [],
+					active: 0,
+					value1: 0,
+					option1: [],
+					envControlDatas: {}
+				}
+			});
+
+			var Winwidth = window.screen.width - 10;
+
+			var timesAll = [];
+			var soilTemperature = [];
+			var illIntensity = [];
+			var soilHumidity = [];
+			var soilPh = [];
+			var rainfall = [];
+			var airTemperature = [];
+			var airHumidity = [];
+			var windSpeed = [];
+
+			var typeId = 1;
+
+			var names = 0;
+
+			mui.plusReady(function() {
+				ajaxs(getBaseByUidAndEqui, 'get').then(function(response) {
+					envCon.baseOrder = response.result;
+					if(envCon.baseOrder.length > 0) {
+						envCon.value1 = envCon.baseOrder[0].id;
+						document.getElementById('baseName').innerText = envCon.baseOrder[0].baseName;
+						baseId = envCon.baseOrder[0].id;
+						for(let index in envCon.baseOrder) {
+							envCon.option1.push({
+								text: envCon.baseOrder[index].baseName,
+								value: envCon.baseOrder[index].id
+							});
+						}
+						ajaxs(getTodayEnv + "?baseId=" + baseId + '&typeId=' + typeId, 'get').then(function(response) {
+							if(response.result != '') {
+								envCon.envControlDatas = response.result;
+								timesAll = response.result.monitorTime;
+								soilTemperature = response.result.soilTemperature;
+								soilHumidity = response.result.soilHumidity;
+								illIntensity = response.result.illIntensity;
+								rainfall = response.result.rainfall;
+								soilPh = response.result.soilPh;
+								airTemperature = response.result.airTemperature;
+								airHumidity = response.result.airHumidity;
+								windSpeed = response.result.windSpeed;
+								document.getElementById('chart06').style.width = Winwidth + "px";
+								let myChart = echarts.init(document.getElementById('chart06'));
+								// 绘制图表
+								myChart.setOption({
+									grid: {
+										x: 35,
+										x2: 25,
+										y: 30,
+										y2: 25,
+										backgroundColor: '#F3F3F3',
+									},
+									tooltip: {
+										trigger: 'axis',
+										backgroundColor: '#9C9C9C', // 提示框背景颜色
+										formatter: function(params) {
+											return params[0].name + "<br>" + "大气温度" + ":" + params[0].data + "°C" + "<br>";
+										},
+									},
+									toolbox: {
+										show: false,
+										feature: {
+											mark: {
+												show: true
+											},
+											dataView: {
+												show: true,
+												readOnly: false
+											},
+											magicType: {
+												show: true,
+												type: ['line', 'bar']
+											},
+											restore: {
+												show: true
+											},
+											saveAsImage: {
+												show: true
+											}
+										}
+									},
+									calculable: false,
+									xAxis: [{
+										type: 'category',
+										data: timesAll,
+										splitLine: {
+											show: false
+										},
+									}],
+									yAxis: [{
+										type: 'value',
+										splitArea: {
+											show: true
+										},
+										splitLine: {
+											show: false
+										},
+										axisLine: {
+											show: false
+										},
+										axisTick: {
+											show: false
+										},
+									}],
+									series: [{
+										name: '温度表',
+										type: 'line',
+										symbolSize: 4, //设定实心点的大小
+										itemStyle: {
+											normal: {
+												label: {
+													show: true,
+													position: 'top',
+													textStyle: {
+														color: '#2ec7c9'
+													}
+												},
+												color: "#F3F3F3",
+												borderColor: '#2ec7c9',
+												lineStyle: {
+													color: "#2ec7c9"
+												}
+											}
+										},
+										data: airTemperature
+									}]
+								});
+							}
+						}).catch(function(error) {})
+					}
+				}).catch(function(error) {})
+			})
+
+			function changeType() {
+				var myselect = document.getElementById("selectType");
+				var index = myselect.selectedIndex;
+				typeId = index + 1;
+				ajaxs(getTodayEnv + "?baseId=" + baseId + '&typeId=' + typeId, 'get').then(function(response) {
+					if(response.result != '') {
+						envCon.envControlDatas = response.result;
+						timesAll = response.result.monitorTime;
+						soilTemperature = response.result.soilTemperature;
+						soilHumidity = response.result.soilHumidity;
+						illIntensity = response.result.illIntensity;
+						rainfall = response.result.rainfall;
+						soilPh = response.result.soilPh;
+						airTemperature = response.result.airTemperature;
+						airHumidity = response.result.airHumidity;
+						windSpeed = response.result.windSpeed;
+					}
+					setTimeout(function() {
+						if(names == 0) {
+							let myChart06 = echarts.init(document.getElementById('chart06'));
+							// 绘制图表
+							myChart06.setOption({
+								grid: {
+									x: 35,
+									x2: 25,
+									y: 30,
+									y2: 25,
+									backgroundColor: '#F3F3F3',
+								},
+								tooltip: {
+									trigger: 'axis',
+									backgroundColor: '#9C9C9C', // 提示框背景颜色
+									formatter: function(params) {
+										return params[0].name + "<br>" + "大气温度" + ":" + params[0].data + "°C" + "<br>";
+									},
+								},
+								toolbox: {
+									show: false,
+									feature: {
+										mark: {
+											show: true
+										},
+										dataView: {
+											show: true,
+											readOnly: false
+										},
+										magicType: {
+											show: true,
+											type: ['line', 'bar']
+										},
+										restore: {
+											show: true
+										},
+										saveAsImage: {
+											show: true
+										}
+									}
+								},
+								calculable: false,
+								xAxis: [{
+									type: 'category',
+									data: timesAll,
+									splitLine: {
+										show: false
+									},
+								}],
+								yAxis: [{
+									type: 'value',
+									splitArea: {
+										show: true
+									},
+									splitLine: {
+										show: false
+									},
+									axisLine: {
+										show: false
+									},
+									axisTick: {
+										show: false
+									},
+								}],
+								series: [{
+									name: '温度表',
+									type: 'line',
+									symbolSize: 4, //设定实心点的大小
+									itemStyle: {
+										normal: {
+											label: {
+												show: true,
+												position: 'top',
+												textStyle: {
+													color: '#2ec7c9'
+												}
+											},
+											color: "#F3F3F3",
+											borderColor: '#2ec7c9',
+											lineStyle: {
+												color: "#2ec7c9"
+											}
+										}
+									},
+									data: airTemperature
+								}]
+							});
+						} else if(names == 1) {
+							let myChart07 = echarts.init(document.getElementById('chart07'));
+							// 绘制图表
+							myChart07.setOption({
+								grid: {
+									x: 35,
+									x2: 25,
+									y: 30,
+									y2: 25,
+									backgroundColor: '#F3F3F3',
+								},
+								tooltip: {
+									trigger: 'axis',
+									backgroundColor: '#9C9C9C', // 提示框背景颜色
+									formatter: function(params) {
+										return params[0].name + "<br>" + "大气湿度" + ":" + params[0].data + "%" + "<br>";
+									},
+								},
+								toolbox: {
+									show: false,
+									feature: {
+										mark: {
+											show: true
+										},
+										dataView: {
+											show: true,
+											readOnly: false
+										},
+										magicType: {
+											show: true,
+											type: ['line', 'bar']
+										},
+										restore: {
+											show: true
+										},
+										saveAsImage: {
+											show: true
+										}
+									}
+								},
+								calculable: false,
+								xAxis: [{
+									type: 'category',
+									data: timesAll,
+									splitLine: {
+										show: false
+									},
+								}],
+								yAxis: [{
+									type: 'value',
+									splitArea: {
+										show: true
+									},
+									splitLine: {
+										show: false
+									},
+									axisLine: {
+										show: false
+									},
+									axisTick: {
+										show: false
+									},
+								}],
+								series: [{
+									name: '大气湿度表',
+									type: 'line',
+									symbolSize: 4, //设定实心点的大小
+									itemStyle: {
+										normal: {
+											label: {
+												show: true,
+												position: 'top',
+												textStyle: {
+													color: '#2ec7c9'
+												}
+											},
+											color: "#F3F3F3",
+											borderColor: '#2ec7c9',
+											lineStyle: {
+												color: "#2ec7c9"
+											}
+										}
+									},
+									data: airHumidity
+								}]
+							});
+						} else if(names == 2) {
+							let myChart01 = echarts.init(document.getElementById('chart01'));
+							myChart01.setOption({
+								grid: {
+									x: 35,
+									x2: 25,
+									y: 30,
+									y2: 25,
+									backgroundColor: '#F3F3F3',
+								},
+								tooltip: {
+									trigger: 'axis',
+									backgroundColor: '#9C9C9C', // 提示框背景颜色
+									formatter: function(params) {
+										return params[0].name + "<br>" + "土壤温度" + ":" + params[0].data + "°C" + "<br>";
+									},
+								},
+								toolbox: {
+									show: false,
+									feature: {
+										mark: {
+											show: true
+										},
+										dataView: {
+											show: true,
+											readOnly: false
+										},
+										magicType: {
+											show: true,
+											type: ['line', 'bar']
+										},
+										restore: {
+											show: true
+										},
+										saveAsImage: {
+											show: true
+										}
+									}
+								},
+								calculable: false,
+								xAxis: [{
+									type: 'category',
+									data: timesAll,
+									splitLine: {
+										show: false
+									},
+								}],
+								yAxis: [{
+									type: 'value',
+									splitArea: {
+										show: true
+									},
+									splitLine: {
+										show: false
+									},
+									axisLine: {
+										show: false
+									},
+									axisTick: {
+										show: false
+									},
+								}],
+								series: [{
+									name: '温度表',
+									type: 'line',
+									symbolSize: 4, //设定实心点的大小
+									itemStyle: {
+										normal: {
+											label: {
+												show: true,
+												position: 'top',
+												textStyle: {
+													color: '#2ec7c9'
+												}
+											},
+											color: "#F3F3F3",
+											borderColor: '#2ec7c9',
+											lineStyle: {
+												color: "#2ec7c9"
+											}
+										}
+									},
+									data: soilTemperature
+								}]
+							}, true);
+						} else if(names == 3) {
+							let myChart02 = echarts.init(document.getElementById('chart02'));
+							myChart02.setOption({
+								grid: {
+									x: 50,
+									x2: 25,
+									y: 30,
+									y2: 25,
+									backgroundColor: '#F3F3F3',
+								},
+								tooltip: {
+									trigger: 'axis',
+									backgroundColor: '#9C9C9C', // 提示框背景颜色
+									formatter: function(params) {
+										return params[0].name + "<br>" + "光照强度" + ":" + params[0].data + "Lux" + "<br>";
+									},
+								},
+								toolbox: {
+									show: false,
+									feature: {
+										mark: {
+											show: true
+										},
+										dataView: {
+											show: true,
+											readOnly: false
+										},
+										magicType: {
+											show: true,
+											type: ['line', 'bar']
+										},
+										restore: {
+											show: true
+										},
+										saveAsImage: {
+											show: true
+										}
+									}
+								},
+								calculable: false,
+								xAxis: [{
+									type: 'category',
+									data: timesAll,
+									splitLine: {
+										show: false
+									},
+								}],
+								yAxis: [{
+									type: 'value',
+									splitArea: {
+										show: true
+									},
+									splitLine: {
+										show: false
+									},
+									axisLine: {
+										show: false
+									},
+									axisTick: {
+										show: false
+									},
+								}],
+								series: [{
+									name: '光照表',
+									type: 'line',
+									symbolSize: 4, //设定实心点的大小
+									itemStyle: {
+										normal: {
+											label: {
+												show: true,
+												position: 'top',
+												textStyle: {
+													color: '#2ec7c9'
+												}
+											},
+											color: "#F3F3F3",
+											borderColor: '#2ec7c9',
+											lineStyle: {
+												color: "#2ec7c9"
+											}
+										}
+									},
+									data: illIntensity
+								}]
+							}, true);
+						} else if(names == 4) {
+							let myChart03 = echarts.init(document.getElementById('chart03'));
+							myChart03.setOption({
+								grid: {
+									x: 50,
+									x2: 20,
+									y: 30,
+									y2: 25,
+									backgroundColor: '#F3F3F3',
+								},
+								tooltip: {
+									trigger: 'axis',
+									backgroundColor: '#9C9C9C', // 提示框背景颜色
+									formatter: function(params) {
+										return params[0].name + "<br>" + "光照强度" + ":" + params[0].data + "Lux" + "<br>";
+									},
+								},
+								toolbox: {
+									show: false,
+									feature: {
+										mark: {
+											show: true
+										},
+										dataView: {
+											show: true,
+											readOnly: false
+										},
+										magicType: {
+											show: true,
+											type: ['line', 'bar']
+										},
+										restore: {
+											show: true
+										},
+										saveAsImage: {
+											show: true
+										}
+									}
+								},
+								calculable: false,
+								xAxis: [{
+									type: 'category',
+									data: timesAll,
+									splitLine: {
+										show: false
+									},
+								}],
+								yAxis: [{
+									type: 'value',
+									splitArea: {
+										show: true
+									},
+									splitLine: {
+										show: false
+									},
+									axisLine: {
+										show: false
+									},
+									axisTick: {
+										show: false
+									},
+								}],
+								series: [{
+									name: '光照表',
+									type: 'line',
+									symbolSize: 4, //设定实心点的大小
+									itemStyle: {
+										normal: {
+											label: {
+												show: true,
+												position: 'top',
+												textStyle: {
+													color: '#2ec7c9'
+												}
+											},
+											color: "#F3F3F3",
+											borderColor: '#2ec7c9',
+											lineStyle: {
+												color: "#2ec7c9"
+											}
+										}
+									},
+									data: illIntensity
+								}]
+							}, true);
+						} else if(names == 5) {
+							let myChart04 = echarts.init(document.getElementById('chart04'));
+							myChart04.setOption({
+								grid: {
+									x: 35,
+									x2: 25,
+									y: 30,
+									y2: 25,
+									backgroundColor: '#F3F3F3',
+								},
+								tooltip: {
+									trigger: 'axis',
+									backgroundColor: '#9C9C9C', // 提示框背景颜色
+									formatter: function(params) {
+										return params[0].name + "<br>" + "降雨量" + ":" + params[0].data + "mm" + "<br>";
+									},
+								},
+								toolbox: {
+									show: false,
+									feature: {
+										mark: {
+											show: true
+										},
+										dataView: {
+											show: true,
+											readOnly: false
+										},
+										magicType: {
+											show: true,
+											type: ['line', 'bar']
+										},
+										restore: {
+											show: true
+										},
+										saveAsImage: {
+											show: true
+										}
+									}
+								},
+								calculable: false,
+								xAxis: [{
+									type: 'category',
+									data: timesAll,
+									splitLine: {
+										show: false
+									},
+								}],
+								yAxis: [{
+									type: 'value',
+									splitArea: {
+										show: true
+									},
+									splitLine: {
+										show: false
+									},
+									axisLine: {
+										show: false
+									},
+									axisTick: {
+										show: false
+									},
+								}],
+								series: [{
+									name: '降雨量表',
+									type: 'line',
+									symbolSize: 4, //设定实心点的大小
+									itemStyle: {
+										normal: {
+											label: {
+												show: true,
+												position: 'top',
+												textStyle: {
+													color: '#2ec7c9'
+												}
+											},
+											color: "#F3F3F3",
+											borderColor: '#2ec7c9',
+											lineStyle: {
+												color: "#2ec7c9"
+											}
+										}
+									},
+									data: rainfall
+								}]
+							}, true);
+						} else if(names == 6) {
+							let myChart05 = echarts.init(document.getElementById('chart05'));
+							myChart05.setOption({
+								grid: {
+									x: 35,
+									x2: 25,
+									y: 30,
+									y2: 25,
+									backgroundColor: '#F3F3F3',
+								},
+								tooltip: {
+									trigger: 'axis',
+									backgroundColor: '#9C9C9C', // 提示框背景颜色
+									formatter: function(params) {
+										return params[0].name + "<br>" + "土壤ph值" + ":" + params[0].data;
+									},
+								},
+								toolbox: {
+									show: false,
+									feature: {
+										mark: {
+											show: true
+										},
+										dataView: {
+											show: true,
+											readOnly: false
+										},
+										magicType: {
+											show: true,
+											type: ['line', 'bar']
+										},
+										restore: {
+											show: true
+										},
+										saveAsImage: {
+											show: true
+										}
+									}
+								},
+								calculable: false,
+								xAxis: [{
+									type: 'category',
+									data: timesAll,
+									splitLine: {
+										show: false
+									},
+								}],
+								yAxis: [{
+									type: 'value',
+									splitArea: {
+										show: true
+									},
+									splitLine: {
+										show: false
+									},
+									axisLine: {
+										show: false
+									},
+									axisTick: {
+										show: false
+									},
+								}],
+								series: [{
+									name: 'ph值',
+									type: 'line',
+									symbolSize: 4, //设定实心点的大小
+									itemStyle: {
+										normal: {
+											label: {
+												show: true,
+												position: 'top',
+												textStyle: {
+													color: '#2ec7c9'
+												}
+											},
+											color: "#F3F3F3",
+											borderColor: '#2ec7c9',
+											lineStyle: {
+												color: "#2ec7c9"
+											}
+										}
+									},
+									data: soilPh
+								}]
+							}, true);
+						} else if(names == 7) {
+							let myChart08 = echarts.init(document.getElementById('chart08'));
+							// 绘制图表
+							myChart08.setOption({
+								grid: {
+									x: 35,
+									x2: 25,
+									y: 30,
+									y2: 25,
+									backgroundColor: '#F3F3F3',
+								},
+								tooltip: {
+									trigger: 'axis',
+									backgroundColor: '#9C9C9C', // 提示框背景颜色
+									formatter: function(params) {
+										return params[0].name + "<br>" + "风速" + ":" + params[0].data + "m/s" + "<br>";
+									},
+								},
+								toolbox: {
+									show: false,
+									feature: {
+										mark: {
+											show: true
+										},
+										dataView: {
+											show: true,
+											readOnly: false
+										},
+										magicType: {
+											show: true,
+											type: ['line', 'bar']
+										},
+										restore: {
+											show: true
+										},
+										saveAsImage: {
+											show: true
+										}
+									}
+								},
+								calculable: false,
+								xAxis: [{
+									type: 'category',
+									data: timesAll,
+									splitLine: {
+										show: false
+									},
+								}],
+								yAxis: [{
+									type: 'value',
+									splitArea: {
+										show: true
+									},
+									splitLine: {
+										show: false
+									},
+									axisLine: {
+										show: false
+									},
+									axisTick: {
+										show: false
+									},
+								}],
+								series: [{
+									name: '风速表',
+									type: 'line',
+									symbolSize: 4, //设定实心点的大小
+									itemStyle: {
+										normal: {
+											label: {
+												show: true,
+												position: 'top',
+												textStyle: {
+													color: '#2ec7c9'
+												}
+											},
+											color: "#F3F3F3",
+											borderColor: '#2ec7c9',
+											lineStyle: {
+												color: "#2ec7c9"
+											}
+										}
+									},
+									data: windSpeed
+								}]
+							});
+						}
+					}, 300);
+				}).catch(function(error) {
+
+				})
+
+			}
+
+			function changes(value) {
+				baseId = value;
+				ajaxs(getTodayEnv + "?baseId=" + value + '&typeId=' + typeId, 'get').then(function(response) {
+					if(response.result != '') {
+						envCon.envControlDatas = response.result;
+						timesAll = response.result.monitorTime;
+						soilTemperature = response.result.soilTemperature;
+						soilHumidity = response.result.soilHumidity;
+						illIntensity = response.result.illIntensity;
+						rainfall = response.result.rainfall;
+						soilPh = response.result.soilPh;
+						airTemperature = response.result.airTemperature;
+						airHumidity = response.result.airHumidity;
+						windSpeed = response.result.windSpeed;
+						setTimeout(function() {
+							if(names == 0) {
+								document.getElementById('chart06').style.width = Winwidth + "px";
+								let myChart06 = echarts.init(document.getElementById('chart06'));
+								// 绘制图表
+								myChart06.setOption({
+									grid: {
+										x: 35,
+										x2: 25,
+										y: 30,
+										y2: 25,
+										backgroundColor: '#F3F3F3',
+									},
+									tooltip: {
+										trigger: 'axis',
+										backgroundColor: '#9C9C9C', // 提示框背景颜色
+										formatter: function(params) {
+											return params[0].name + "<br>" + "大气温度" + ":" + params[0].data + "°C" + "<br>";
+										},
+									},
+									toolbox: {
+										show: false,
+										feature: {
+											mark: {
+												show: true
+											},
+											dataView: {
+												show: true,
+												readOnly: false
+											},
+											magicType: {
+												show: true,
+												type: ['line', 'bar']
+											},
+											restore: {
+												show: true
+											},
+											saveAsImage: {
+												show: true
+											}
+										}
+									},
+									calculable: false,
+									xAxis: [{
+										type: 'category',
+										data: timesAll,
+										splitLine: {
+											show: false
+										},
+									}],
+									yAxis: [{
+										type: 'value',
+										splitArea: {
+											show: true
+										},
+										splitLine: {
+											show: false
+										},
+										axisLine: {
+											show: false
+										},
+										axisTick: {
+											show: false
+										},
+									}],
+									series: [{
+										name: '温度表',
+										type: 'line',
+										symbolSize: 4, //设定实心点的大小
+										itemStyle: {
+											normal: {
+												label: {
+													show: true,
+													position: 'top',
+													textStyle: {
+														color: '#2ec7c9'
+													}
+												},
+												color: "#F3F3F3",
+												borderColor: '#2ec7c9',
+												lineStyle: {
+													color: "#2ec7c9"
+												}
+											}
+										},
+										data: airTemperature
+									}]
+								});
+							} else if(names == 1) {
+								let myChart07 = echarts.init(document.getElementById('chart07'));
+								// 绘制图表
+								myChart07.setOption({
+									grid: {
+										x: 35,
+										x2: 25,
+										y: 30,
+										y2: 25,
+										backgroundColor: '#F3F3F3',
+									},
+									tooltip: {
+										trigger: 'axis',
+										backgroundColor: '#9C9C9C', // 提示框背景颜色
+										formatter: function(params) {
+											return params[0].name + "<br>" + "大气湿度" + ":" + params[0].data + "%" + "<br>";
+										},
+									},
+									toolbox: {
+										show: false,
+										feature: {
+											mark: {
+												show: true
+											},
+											dataView: {
+												show: true,
+												readOnly: false
+											},
+											magicType: {
+												show: true,
+												type: ['line', 'bar']
+											},
+											restore: {
+												show: true
+											},
+											saveAsImage: {
+												show: true
+											}
+										}
+									},
+									calculable: false,
+									xAxis: [{
+										type: 'category',
+										data: timesAll,
+										splitLine: {
+											show: false
+										},
+									}],
+									yAxis: [{
+										type: 'value',
+										splitArea: {
+											show: true
+										},
+										splitLine: {
+											show: false
+										},
+										axisLine: {
+											show: false
+										},
+										axisTick: {
+											show: false
+										},
+									}],
+									series: [{
+										name: '大气湿度表',
+										type: 'line',
+										symbolSize: 4, //设定实心点的大小
+										itemStyle: {
+											normal: {
+												label: {
+													show: true,
+													position: 'top',
+													textStyle: {
+														color: '#2ec7c9'
+													}
+												},
+												color: "#F3F3F3",
+												borderColor: '#2ec7c9',
+												lineStyle: {
+													color: "#2ec7c9"
+												}
+											}
+										},
+										data: airHumidity
+									}]
+								});
+							} else if(names == 2) {
+								let myChart01 = echarts.init(document.getElementById('chart01'));
+								myChart01.setOption({
+									grid: {
+										x: 35,
+										x2: 25,
+										y: 30,
+										y2: 25,
+										backgroundColor: '#F3F3F3',
+									},
+									tooltip: {
+										trigger: 'axis',
+										backgroundColor: '#9C9C9C', // 提示框背景颜色
+										formatter: function(params) {
+											return params[0].name + "<br>" + "土壤温度" + ":" + params[0].data + "°C" + "<br>";
+										},
+									},
+									toolbox: {
+										show: false,
+										feature: {
+											mark: {
+												show: true
+											},
+											dataView: {
+												show: true,
+												readOnly: false
+											},
+											magicType: {
+												show: true,
+												type: ['line', 'bar']
+											},
+											restore: {
+												show: true
+											},
+											saveAsImage: {
+												show: true
+											}
+										}
+									},
+									calculable: false,
+									xAxis: [{
+										type: 'category',
+										data: timesAll,
+										splitLine: {
+											show: false
+										},
+									}],
+									yAxis: [{
+										type: 'value',
+										splitArea: {
+											show: true
+										},
+										splitLine: {
+											show: false
+										},
+										axisLine: {
+											show: false
+										},
+										axisTick: {
+											show: false
+										},
+									}],
+									series: [{
+										name: '温度表',
+										type: 'line',
+										symbolSize: 4, //设定实心点的大小
+										itemStyle: {
+											normal: {
+												label: {
+													show: true,
+													position: 'top',
+													textStyle: {
+														color: '#2ec7c9'
+													}
+												},
+												color: "#F3F3F3",
+												borderColor: '#2ec7c9',
+												lineStyle: {
+													color: "#2ec7c9"
+												}
+											}
+										},
+										data: soilTemperature
+									}]
+								}, true);
+							} else if(names == 3) {
+								let myChart02 = echarts.init(document.getElementById('chart02'));
+								myChart02.setOption({
+									grid: {
+										x: 35,
+										x2: 25,
+										y: 30,
+										y2: 25,
+										backgroundColor: '#F3F3F3',
+									},
+									tooltip: {
+										trigger: 'axis',
+										backgroundColor: '#9C9C9C', // 提示框背景颜色
+										formatter: function(params) {
+											return params[0].name + "<br>" + "光照强度" + ":" + params[0].data + "Lux" + "<br>";
+										},
+									},
+									toolbox: {
+										show: false,
+										feature: {
+											mark: {
+												show: true
+											},
+											dataView: {
+												show: true,
+												readOnly: false
+											},
+											magicType: {
+												show: true,
+												type: ['line', 'bar']
+											},
+											restore: {
+												show: true
+											},
+											saveAsImage: {
+												show: true
+											}
+										}
+									},
+									calculable: false,
+									xAxis: [{
+										type: 'category',
+										data: timesAll,
+										splitLine: {
+											show: false
+										},
+									}],
+									yAxis: [{
+										type: 'value',
+										splitArea: {
+											show: true
+										},
+										splitLine: {
+											show: false
+										},
+										axisLine: {
+											show: false
+										},
+										axisTick: {
+											show: false
+										},
+									}],
+									series: [{
+										name: '光照表',
+										type: 'line',
+										symbolSize: 4, //设定实心点的大小
+										itemStyle: {
+											normal: {
+												label: {
+													show: true,
+													position: 'top',
+													textStyle: {
+														color: '#2ec7c9'
+													}
+												},
+												color: "#F3F3F3",
+												borderColor: '#2ec7c9',
+												lineStyle: {
+													color: "#2ec7c9"
+												}
+											}
+										},
+										data: illIntensity
+									}]
+								}, true);
+							} else if(names == 4) {
+								let myChart03 = echarts.init(document.getElementById('chart03'));
+								myChart03.setOption({
+									grid: {
+										x: 50,
+										x2: 20,
+										y: 30,
+										y2: 25,
+										backgroundColor: '#F3F3F3',
+									},
+									tooltip: {
+										trigger: 'axis',
+										backgroundColor: '#9C9C9C', // 提示框背景颜色
+										formatter: function(params) {
+											return params[0].name + "<br>" + "光照强度" + ":" + params[0].data + "Lux" + "<br>";
+										},
+									},
+									toolbox: {
+										show: false,
+										feature: {
+											mark: {
+												show: true
+											},
+											dataView: {
+												show: true,
+												readOnly: false
+											},
+											magicType: {
+												show: true,
+												type: ['line', 'bar']
+											},
+											restore: {
+												show: true
+											},
+											saveAsImage: {
+												show: true
+											}
+										}
+									},
+									calculable: false,
+									xAxis: [{
+										type: 'category',
+										data: timesAll,
+										splitLine: {
+											show: false
+										},
+									}],
+									yAxis: [{
+										type: 'value',
+										splitArea: {
+											show: true
+										},
+										splitLine: {
+											show: false
+										},
+										axisLine: {
+											show: false
+										},
+										axisTick: {
+											show: false
+										},
+									}],
+									series: [{
+										name: '光照表',
+										type: 'line',
+										symbolSize: 4, //设定实心点的大小
+										itemStyle: {
+											normal: {
+												label: {
+													show: true,
+													position: 'top',
+													textStyle: {
+														color: '#2ec7c9'
+													}
+												},
+												color: "#F3F3F3",
+												borderColor: '#2ec7c9',
+												lineStyle: {
+													color: "#2ec7c9"
+												}
+											}
+										},
+										data: illIntensity
+									}]
+								}, true);
+							} else if(names == 5) {
+								let myChart04 = echarts.init(document.getElementById('chart04'));
+								myChart04.setOption({
+									grid: {
+										x: 35,
+										x2: 25,
+										y: 30,
+										y2: 25,
+										backgroundColor: '#F3F3F3',
+									},
+									tooltip: {
+										trigger: 'axis',
+										backgroundColor: '#9C9C9C', // 提示框背景颜色
+										formatter: function(params) {
+											return params[0].name + "<br>" + "降雨量" + ":" + params[0].data + "mm" + "<br>";
+										},
+									},
+									toolbox: {
+										show: false,
+										feature: {
+											mark: {
+												show: true
+											},
+											dataView: {
+												show: true,
+												readOnly: false
+											},
+											magicType: {
+												show: true,
+												type: ['line', 'bar']
+											},
+											restore: {
+												show: true
+											},
+											saveAsImage: {
+												show: true
+											}
+										}
+									},
+									calculable: false,
+									xAxis: [{
+										type: 'category',
+										data: timesAll,
+										splitLine: {
+											show: false
+										},
+									}],
+									yAxis: [{
+										type: 'value',
+										splitArea: {
+											show: true
+										},
+										splitLine: {
+											show: false
+										},
+										axisLine: {
+											show: false
+										},
+										axisTick: {
+											show: false
+										},
+									}],
+									series: [{
+										name: '降雨量表',
+										type: 'line',
+										symbolSize: 4, //设定实心点的大小
+										itemStyle: {
+											normal: {
+												label: {
+													show: true,
+													position: 'top',
+													textStyle: {
+														color: '#2ec7c9'
+													}
+												},
+												color: "#F3F3F3",
+												borderColor: '#2ec7c9',
+												lineStyle: {
+													color: "#2ec7c9"
+												}
+											}
+										},
+										data: rainfall
+									}]
+								}, true);
+							} else if(names == 6) {
+								let myChart05 = echarts.init(document.getElementById('chart05'));
+								myChart05.setOption({
+									grid: {
+										x: 35,
+										x2: 25,
+										y: 30,
+										y2: 25,
+										backgroundColor: '#F3F3F3',
+									},
+									tooltip: {
+										trigger: 'axis',
+										backgroundColor: '#9C9C9C', // 提示框背景颜色
+										formatter: function(params) {
+											return params[0].name + "<br>" + "土壤ph值" + ":" + params[0].data;
+										},
+									},
+									toolbox: {
+										show: false,
+										feature: {
+											mark: {
+												show: true
+											},
+											dataView: {
+												show: true,
+												readOnly: false
+											},
+											magicType: {
+												show: true,
+												type: ['line', 'bar']
+											},
+											restore: {
+												show: true
+											},
+											saveAsImage: {
+												show: true
+											}
+										}
+									},
+									calculable: false,
+									xAxis: [{
+										type: 'category',
+										data: timesAll,
+										splitLine: {
+											show: false
+										},
+									}],
+									yAxis: [{
+										type: 'value',
+										splitArea: {
+											show: true
+										},
+										splitLine: {
+											show: false
+										},
+										axisLine: {
+											show: false
+										},
+										axisTick: {
+											show: false
+										},
+									}],
+									series: [{
+										name: 'ph值',
+										type: 'line',
+										symbolSize: 4, //设定实心点的大小
+										itemStyle: {
+											normal: {
+												label: {
+													show: true,
+													position: 'top',
+													textStyle: {
+														color: '#2ec7c9'
+													}
+												},
+												color: "#F3F3F3",
+												borderColor: '#2ec7c9',
+												lineStyle: {
+													color: "#2ec7c9"
+												}
+											}
+										},
+										data: soilPh
+									}]
+								}, true);
+							} else if(names == 7) {
+								let myChart08 = echarts.init(document.getElementById('chart08'));
+								// 绘制图表
+								myChart08.setOption({
+									grid: {
+										x: 35,
+										x2: 25,
+										y: 30,
+										y2: 25,
+										backgroundColor: '#F3F3F3',
+									},
+									tooltip: {
+										trigger: 'axis',
+										backgroundColor: '#9C9C9C', // 提示框背景颜色
+										formatter: function(params) {
+											return params[0].name + "<br>" + "风速" + ":" + params[0].data + "m/s" + "<br>";
+										},
+									},
+									toolbox: {
+										show: false,
+										feature: {
+											mark: {
+												show: true
+											},
+											dataView: {
+												show: true,
+												readOnly: false
+											},
+											magicType: {
+												show: true,
+												type: ['line', 'bar']
+											},
+											restore: {
+												show: true
+											},
+											saveAsImage: {
+												show: true
+											}
+										}
+									},
+									calculable: false,
+									xAxis: [{
+										type: 'category',
+										data: timesAll,
+										splitLine: {
+											show: false
+										},
+									}],
+									yAxis: [{
+										type: 'value',
+										splitArea: {
+											show: true
+										},
+										splitLine: {
+											show: false
+										},
+										axisLine: {
+											show: false
+										},
+										axisTick: {
+											show: false
+										},
+									}],
+									series: [{
+										name: '风速表',
+										type: 'line',
+										symbolSize: 4, //设定实心点的大小
+										itemStyle: {
+											normal: {
+												label: {
+													show: true,
+													position: 'top',
+													textStyle: {
+														color: '#2ec7c9'
+													}
+												},
+												color: "#F3F3F3",
+												borderColor: '#2ec7c9',
+												lineStyle: {
+													color: "#2ec7c9"
+												}
+											}
+										},
+										data: windSpeed
+									}]
+								});
+							}
+
+						}, 100);
+					}
+				}).catch(function(error) {
+
+				})
+			}
+
+			function isopen() {
+
+			}
+
+			function isclose() {
+
+			}
+
+			function changeVan(name) {
+				names = name;
+				setTimeout(function() {
+					if(name == 0) {
+						document.getElementById('chart06').style.width = Winwidth + "px";
+						let myChart = echarts.init(document.getElementById('chart06'));
+						// 绘制图表
+						myChart.setOption({
+							grid: {
+								x: 35,
+								x2: 25,
+								y: 30,
+								y2: 25,
+								backgroundColor: '#F3F3F3',
+							},
+							tooltip: {
+								trigger: 'axis',
+								backgroundColor: '#9C9C9C', // 提示框背景颜色
+								formatter: function(params) {
+									return params[0].name + "<br>" + "大气温度" + ":" + params[0].data + "°C" + "<br>";
+								},
+							},
+							toolbox: {
+								show: false,
+								feature: {
+									mark: {
+										show: true
+									},
+									dataView: {
+										show: true,
+										readOnly: false
+									},
+									magicType: {
+										show: true,
+										type: ['line', 'bar']
+									},
+									restore: {
+										show: true
+									},
+									saveAsImage: {
+										show: true
+									}
+								}
+							},
+							calculable: false,
+							xAxis: [{
+								type: 'category',
+								data: timesAll,
+								splitLine: {
+									show: false
+								},
+							}],
+							yAxis: [{
+								type: 'value',
+								splitArea: {
+									show: true
+								},
+								splitLine: {
+									show: false
+								},
+								axisLine: {
+									show: false
+								},
+								axisTick: {
+									show: false
+								},
+							}],
+							series: [{
+								name: '温度表',
+								type: 'line',
+								symbolSize: 4, //设定实心点的大小
+								itemStyle: {
+									normal: {
+										label: {
+											show: true,
+											position: 'top',
+											textStyle: {
+												color: '#2ec7c9'
+											}
+										},
+										color: "#F3F3F3",
+										borderColor: '#2ec7c9',
+										lineStyle: {
+											color: "#2ec7c9"
+										}
+									}
+								},
+								data: airTemperature
+							}]
+						});
+					} else if(name == 1) {
+						document.getElementById('chart07').style.width = Winwidth + "px";
+						let myChart07 = echarts.init(document.getElementById('chart07'));
+						// 绘制图表
+						myChart07.setOption({
+							grid: {
+								x: 35,
+								x2: 25,
+								y: 30,
+								y2: 25,
+								backgroundColor: '#F3F3F3',
+							},
+							tooltip: {
+								trigger: 'axis',
+								backgroundColor: '#9C9C9C', // 提示框背景颜色
+								formatter: function(params) {
+									return params[0].name + "<br>" + "大气湿度" + ":" + params[0].data + "%" + "<br>";
+								},
+							},
+							toolbox: {
+								show: false,
+								feature: {
+									mark: {
+										show: true
+									},
+									dataView: {
+										show: true,
+										readOnly: false
+									},
+									magicType: {
+										show: true,
+										type: ['line', 'bar']
+									},
+									restore: {
+										show: true
+									},
+									saveAsImage: {
+										show: true
+									}
+								}
+							},
+							calculable: false,
+							xAxis: [{
+								type: 'category',
+								data: timesAll,
+								splitLine: {
+									show: false
+								},
+							}],
+							yAxis: [{
+								type: 'value',
+								splitArea: {
+									show: true
+								},
+								splitLine: {
+									show: false
+								},
+								axisLine: {
+									show: false
+								},
+								axisTick: {
+									show: false
+								},
+							}],
+							series: [{
+								name: '大气湿度表',
+								type: 'line',
+								symbolSize: 4, //设定实心点的大小
+								itemStyle: {
+									normal: {
+										label: {
+											show: true,
+											position: 'top',
+											textStyle: {
+												color: '#2ec7c9'
+											}
+										},
+										color: "#F3F3F3",
+										borderColor: '#2ec7c9',
+										lineStyle: {
+											color: "#2ec7c9"
+										}
+									}
+								},
+								data: airHumidity
+							}]
+						});
+					} else if(name == 2) {
+						document.getElementById('chart01').style.width = Winwidth + "px";
+						let myChart = echarts.init(document.getElementById('chart01'));
+						// 绘制图表
+						myChart.setOption({
+							grid: {
+								x: 35,
+								x2: 25,
+								y: 30,
+								y2: 25,
+								backgroundColor: '#F3F3F3',
+							},
+							tooltip: {
+								trigger: 'axis',
+								backgroundColor: '#9C9C9C', // 提示框背景颜色
+								formatter: function(params) {
+									return params[0].name + "<br>" + "土壤温度" + ":" + params[0].data + "°C" + "<br>";
+								},
+							},
+							toolbox: {
+								show: false,
+								feature: {
+									mark: {
+										show: true
+									},
+									dataView: {
+										show: true,
+										readOnly: false
+									},
+									magicType: {
+										show: true,
+										type: ['line', 'bar']
+									},
+									restore: {
+										show: true
+									},
+									saveAsImage: {
+										show: true
+									}
+								}
+							},
+							calculable: false,
+							xAxis: [{
+								type: 'category',
+								data: timesAll,
+								splitLine: {
+									show: false
+								},
+							}],
+							yAxis: [{
+								type: 'value',
+								splitArea: {
+									show: true
+								},
+								splitLine: {
+									show: false
+								},
+								axisLine: {
+									show: false
+								},
+								axisTick: {
+									show: false
+								},
+							}],
+							series: [{
+								name: '温度表',
+								type: 'line',
+								symbolSize: 4, //设定实心点的大小
+								itemStyle: {
+									normal: {
+										label: {
+											show: true,
+											position: 'top',
+											textStyle: {
+												color: '#2ec7c9'
+											}
+										},
+										color: "#F3F3F3",
+										borderColor: '#2ec7c9',
+										lineStyle: {
+											color: "#2ec7c9"
+										}
+									}
+								},
+								data: soilTemperature
+							}]
+						});
+					} else if(name == 3) {
+						document.getElementById('chart02').style.width = Winwidth + "px";
+						let myChart02 = echarts.init(document.getElementById('chart02'));
+						// 绘制图表
+						myChart02.setOption({
+							grid: {
+								x: 35,
+								x2: 25,
+								y: 30,
+								y2: 25,
+								backgroundColor: '#F3F3F3',
+							},
+							tooltip: {
+								trigger: 'axis',
+								backgroundColor: '#9C9C9C', // 提示框背景颜色
+								formatter: function(params) {
+									return params[0].name + "<br>" + "土壤湿度" + ":" + params[0].data + "%" + "<br>";
+								},
+							},
+							toolbox: {
+								show: false,
+								feature: {
+									mark: {
+										show: true
+									},
+									dataView: {
+										show: true,
+										readOnly: false
+									},
+									magicType: {
+										show: true,
+										type: ['line', 'bar']
+									},
+									restore: {
+										show: true
+									},
+									saveAsImage: {
+										show: true
+									}
+								}
+							},
+							calculable: false,
+							xAxis: [{
+								type: 'category',
+								data: timesAll,
+								splitLine: {
+									show: false
+								},
+							}],
+							yAxis: [{
+								type: 'value',
+								splitArea: {
+									show: true
+								},
+								splitLine: {
+									show: false
+								},
+								axisLine: {
+									show: false
+								},
+								axisTick: {
+									show: false
+								},
+							}],
+							series: [{
+								name: '湿度表',
+								type: 'line',
+								symbolSize: 4, //设定实心点的大小
+								itemStyle: {
+									normal: {
+										label: {
+											show: true,
+											position: 'top',
+											textStyle: {
+												color: '#2ec7c9'
+											}
+										},
+										color: "#F3F3F3",
+										borderColor: '#2ec7c9',
+										lineStyle: {
+											color: "#2ec7c9"
+										}
+									}
+								},
+								data: soilHumidity
+							}]
+						});
+					} else if(name == 4) {
+						document.getElementById('chart03').style.width = Winwidth + "px";
+						let myChart03 = echarts.init(document.getElementById('chart03'));
+						// 绘制图表
+						myChart03.setOption({
+							grid: {
+								x: 50,
+								x2: 20,
+								y: 30,
+								y2: 25,
+								backgroundColor: '#F3F3F3',
+							},
+							tooltip: {
+								trigger: 'axis',
+								backgroundColor: '#9C9C9C', // 提示框背景颜色
+								formatter: function(params) {
+									return params[0].name + "<br>" + "光照强度" + ":" + params[0].data + "Lux" + "<br>";
+								},
+							},
+							toolbox: {
+								show: false,
+								feature: {
+									mark: {
+										show: true
+									},
+									dataView: {
+										show: true,
+										readOnly: false
+									},
+									magicType: {
+										show: true,
+										type: ['line', 'bar']
+									},
+									restore: {
+										show: true
+									},
+									saveAsImage: {
+										show: true
+									}
+								}
+							},
+							calculable: false,
+							xAxis: [{
+								type: 'category',
+								data: timesAll,
+								splitLine: {
+									show: false
+								},
+							}],
+							yAxis: [{
+								type: 'value',
+								splitArea: {
+									show: true
+								},
+								splitLine: {
+									show: false
+								},
+								axisLine: {
+									show: false
+								},
+								axisTick: {
+									show: false
+								},
+							}],
+							series: [{
+								name: '光照表',
+								type: 'line',
+								symbolSize: 4, //设定实心点的大小
+								itemStyle: {
+									normal: {
+										label: {
+											show: true,
+											position: 'top',
+											textStyle: {
+												color: '#2ec7c9'
+											}
+										},
+										color: "#F3F3F3",
+										borderColor: '#2ec7c9',
+										lineStyle: {
+											color: "#2ec7c9"
+										}
+									}
+								},
+								data: illIntensity
+							}]
+						});
+					} else if(name == 5) {
+						document.getElementById('chart04').style.width = Winwidth + "px";
+						let myChart04 = echarts.init(document.getElementById('chart04'));
+						// 绘制图表
+						myChart04.setOption({
+							grid: {
+								x: 35,
+								x2: 25,
+								y: 30,
+								y2: 25,
+								backgroundColor: '#F3F3F3',
+							},
+							tooltip: {
+								trigger: 'axis',
+								backgroundColor: '#9C9C9C', // 提示框背景颜色
+								formatter: function(params) {
+									return params[0].name + "<br>" + "降雨量" + ":" + params[0].data + "mm" + "<br>";
+								},
+							},
+							toolbox: {
+								show: false,
+								feature: {
+									mark: {
+										show: true
+									},
+									dataView: {
+										show: true,
+										readOnly: false
+									},
+									magicType: {
+										show: true,
+										type: ['line', 'bar']
+									},
+									restore: {
+										show: true
+									},
+									saveAsImage: {
+										show: true
+									}
+								}
+							},
+							calculable: false,
+							xAxis: [{
+								type: 'category',
+								data: timesAll,
+								splitLine: {
+									show: false
+								},
+							}],
+							yAxis: [{
+								type: 'value',
+								splitArea: {
+									show: true
+								},
+								splitLine: {
+									show: false
+								},
+								axisLine: {
+									show: false
+								},
+								axisTick: {
+									show: false
+								},
+							}],
+							series: [{
+								name: '降雨量表',
+								type: 'line',
+								symbolSize: 4, //设定实心点的大小
+								itemStyle: {
+									normal: {
+										label: {
+											show: true,
+											position: 'top',
+											textStyle: {
+												color: '#2ec7c9'
+											}
+										},
+										color: "#F3F3F3",
+										borderColor: '#2ec7c9',
+										lineStyle: {
+											color: "#2ec7c9"
+										}
+									}
+								},
+								data: rainfall
+							}]
+						});
+					} else if(name == 6) {
+						document.getElementById('chart05').style.width = Winwidth + "px";
+						let myChart05 = echarts.init(document.getElementById('chart05'));
+						// 绘制图表
+						myChart05.setOption({
+							grid: {
+								x: 35,
+								x2: 25,
+								y: 30,
+								y2: 25,
+								backgroundColor: '#F3F3F3',
+							},
+							tooltip: {
+								trigger: 'axis',
+								backgroundColor: '#9C9C9C', // 提示框背景颜色
+								formatter: function(params) {
+									return params[0].name + "<br>" + "土壤ph值" + ":" + params[0].data;
+								},
+							},
+							toolbox: {
+								show: false,
+								feature: {
+									mark: {
+										show: true
+									},
+									dataView: {
+										show: true,
+										readOnly: false
+									},
+									magicType: {
+										show: true,
+										type: ['line', 'bar']
+									},
+									restore: {
+										show: true
+									},
+									saveAsImage: {
+										show: true
+									}
+								}
+							},
+							calculable: false,
+							xAxis: [{
+								type: 'category',
+								data: timesAll,
+								splitLine: {
+									show: false
+								},
+							}],
+							yAxis: [{
+								type: 'value',
+								splitArea: {
+									show: true
+								},
+								splitLine: {
+									show: false
+								},
+								axisLine: {
+									show: false
+								},
+								axisTick: {
+									show: false
+								},
+							}],
+							series: [{
+								name: 'ph值',
+								type: 'line',
+								symbolSize: 4, //设定实心点的大小
+								itemStyle: {
+									normal: {
+										label: {
+											show: true,
+											position: 'top',
+											textStyle: {
+												color: '#2ec7c9'
+											}
+										},
+										color: "#F3F3F3",
+										borderColor: '#2ec7c9',
+										lineStyle: {
+											color: "#2ec7c9"
+										}
+									}
+								},
+								data: soilPh
+							}]
+						});
+					} else if(name == 7) {
+						document.getElementById('chart08').style.width = Winwidth + "px";
+						let myChart08 = echarts.init(document.getElementById('chart08'));
+						// 绘制图表
+						myChart08.setOption({
+							grid: {
+								x: 35,
+								x2: 25,
+								y: 30,
+								y2: 25,
+								backgroundColor: '#F3F3F3',
+							},
+							tooltip: {
+								trigger: 'axis',
+								backgroundColor: '#9C9C9C', // 提示框背景颜色
+								formatter: function(params) {
+									return params[0].name + "<br>" + "风速" + ":" + params[0].data + "m/s" + "<br>";
+								},
+							},
+							toolbox: {
+								show: false,
+								feature: {
+									mark: {
+										show: true
+									},
+									dataView: {
+										show: true,
+										readOnly: false
+									},
+									magicType: {
+										show: true,
+										type: ['line', 'bar']
+									},
+									restore: {
+										show: true
+									},
+									saveAsImage: {
+										show: true
+									}
+								}
+							},
+							calculable: false,
+							xAxis: [{
+								type: 'category',
+								data: timesAll,
+								splitLine: {
+									show: false
+								},
+							}],
+							yAxis: [{
+								type: 'value',
+								splitArea: {
+									show: true
+								},
+								splitLine: {
+									show: false
+								},
+								axisLine: {
+									show: false
+								},
+								axisTick: {
+									show: false
+								},
+							}],
+							series: [{
+								name: '风速表',
+								type: 'line',
+								symbolSize: 4, //设定实心点的大小
+								itemStyle: {
+									normal: {
+										label: {
+											show: true,
+											position: 'top',
+											textStyle: {
+												color: '#2ec7c9'
+											}
+										},
+										color: "#F3F3F3",
+										borderColor: '#2ec7c9',
+										lineStyle: {
+											color: "#2ec7c9"
+										}
+									}
+								},
+								data: windSpeed
+							}]
+						});
+					}
+				}, 10);
+			}
+
+			(function($, doc) {
+				$.init();
+				$.ready(function() {
+					/**
+					 * 获取对象属性的值
+					 * 主要用于过滤三级联动中，可能出现的最低级的数据不存在的情况，实际开发中需要注意这一点；
+					 * @param {Object} obj 对象
+					 * @param {String} param 属性名
+					 */
+					var _getParam = function(obj, param) {
+						return obj[param] || '';
+					};
+					//普通示例
+					var userPicker = new $.PopPicker();
+					var showUserPickerButton = doc.getElementById('showUserPicker');
+					showUserPickerButton.addEventListener('tap', function(event) {
+						envCon.baseOrder = [];
+						envCon.option1 = [];
+						ajaxs(getBaseByUidAndEqui, 'get').then(function(response) {
+							envCon.baseOrder = response.result;
+							if(envCon.baseOrder.length > 0) {
+								for(let index in envCon.baseOrder) {
+									envCon.option1.push({
+										text: envCon.baseOrder[index].baseName,
+										value: envCon.baseOrder[index].id
+									});
+								}
+								userPicker.setData(envCon.option1);
+							} else {
+								envCon.option1 = [];
+								document.getElementById('baseName').innerText = "";
+								userPicker.setData(envCon.option1);
+								var timesAll = [];
+								var soilTemperature = [];
+								var illIntensity = [];
+								var soilHumidity = [];
+								var soilPh = [];
+								var rainfall = [];
+								var airTemperature = [];
+								var airHumidity = [];
+								var windSpeed = [];
+								changes("-1");
+							}
+						}).catch(function(error) {})
+						userPicker.show(function(items) {
+							var jsons = JSON.parse(JSON.stringify(items[0]));
+							if(jsons.text == undefined) {
+								document.getElementById('baseName').innerText = "";
+							} else {
+								document.getElementById('baseName').innerText = jsons.text;
+								changes(jsons.value);
+							}
+						});
+					}, false);
+				});
+			})(mui, document);
+		</script>
+	</body>
+
+</html>

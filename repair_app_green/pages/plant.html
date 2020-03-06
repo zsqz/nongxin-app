@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<!--App自定义的css-->
+		<!--<link rel="stylesheet" type="text/css" href="../css/app.css" />-->
+		<style>
+			* {
+				touch-action: pan-y;
+			}
+			
+			
+			html {
+				height: 100%;
+			}
+			
+			body {
+				height: 100%;
+			}
+			
+			.flex-container {
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-flex-flow: row wrap;
+				justify-content: space-between;
+				text-align: center;
+			}
+			
+			.mui-card .mui-control-content {
+				padding: 10px;
+			}
+			
+			.mui-control-content {
+				height: 150px;
+			}
+			
+			.mui-segmented-control {
+				background-color: white;
+			}
+			
+			.mui-segmented-control .mui-control-item.mui-active {
+				background-color: #12B482;
+			}
+			
+			.mui-segmented-control .mui-control-item {
+				color: #12B482;
+			}
+			
+			.cardAll {
+				width: 100%;
+				height: 140px;
+				background-color: white;
+				-webkit-box-shadow: 0px 2px 4px 0px rgb(153, 153, 153);
+				box-shadow: 0px 2px 4px 0px rgb(153, 153, 153);
+				position: relative;
+				margin-bottom: 15px;
+				border-radius: 10px;
+				color: #666666;
+			}
+			
+			.cardAlls {
+				width: 100%;
+				min-height: 185px;
+				background-color: white;
+				-webkit-box-shadow: 0px 2px 4px 0px rgb(153, 153, 153);
+				box-shadow: 0px 2px 4px 0px rgb(153, 153, 153);
+				position: relative;
+				margin-bottom: 15px;
+				border-radius: 10px;
+				color: #666666;
+			}
+			
+			.iszhixingbox {
+				height: 40px;
+				width: 100%;
+				border-radius: 0px 0px 5px 5px;
+				border-top: 1px solid rgba(238, 238, 238, 1);
+				float: left;
+			}
+			
+			.circle {
+				width: 10px;
+				height: 10px;
+				background-color: #12B482;
+				border-radius: 50%;
+				-moz-border-radius: 50%;
+				-webkit-border-radius: 50%;
+				position: absolute;
+				top: 50%;
+				left: 6%;
+				transform: translate(-50%, -50%);
+			}
+			
+			.overcircle {
+				background-color: #FE6262;
+			}
+			
+			.yellowcircle {
+				background-color: #FEC762;
+			}
+			
+			.card-content {
+				height: 100%;
+				width: 25%;
+				line-height: 50px;
+				margin-left: 8%;
+				float: left;
+				font-size: 15px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap
+			}
+			
+			.mui-control-rightMar {
+				border-right: 1px solid #12B482 !important;
+			}
+			
+			.mui-icon {
+				font-size: 20px;
+			}
+			
+			.flex-container {
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-flex-flow: row wrap;
+				justify-content: space-between;
+				text-align: center;
+			}
+			
+			.mui-content-padded {
+				padding: 10px;
+			}
+			
+			.mui-content-padded a {
+				margin: 3px;
+				width: 50px;
+				height: 50px;
+				display: inline-block;
+				text-align: center;
+				background-color: #fff;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+			}
+			
+			.mui-content-padded a .mui-icon {
+				margin-top: 12px;
+			}
+			
+			.mui-spinner,
+			.mui-spinner-white {
+				margin-top: 12px
+			}
+			
+			.active .mui-spinner-indicator {
+				background: #007AFF;
+			}
+			
+			.mui-content a {
+				color: black;
+			}
+			
+			.mui-content a.active {
+				color: #007aff;
+			}
+			
+			#surveyAll {
+				position: fixed;
+				z-index: 10;
+				right: 0;
+				left: 0;
+				top: 0;
+			}
+			
+			#segmentedControl {
+				position: fixed;
+				z-index: 10;
+				right: 0;
+				left: 0;
+				top: 42px;
+			}
+			
+			.isuserOrder {
+				text-align: center;
+				height: 50px;
+				line-height: 50px;
+			}
+			
+			.batchNameDiv {
+				position: absolute;
+				height: 35%;
+				width: 17%;
+				background-color: #12B482;
+				top: 0px;
+				right: 0px;
+				font-size: 12px;
+				color: white;
+				text-align: center;
+			}
+			
+			.mui-show-loading {
+				position: fixed;
+				padding: 5px;
+				width: 120px;
+				min-height: 120px;
+				top: 45%;
+				left: 50%;
+				margin-left: -60px;
+				background: rgba(0, 0, 0, 0.6);
+				text-align: center;
+				border-radius: 5px;
+				color: #FFFFFF;
+				visibility: hidden;
+				margin: 0;
+				z-index: 2000;
+				-webkit-transition-duration: .2s;
+				transition-duration: .2s;
+				opacity: 0;
+				-webkit-transform: scale(0.9) translate(-50%, -50%);
+				transform: scale(0.9) translate(-50%, -50%);
+				-webkit-transform-origin: 0 0;
+				transform-origin: 0 0;
+			}
+			
+			.mui-show-loading.loading-visible {
+				opacity: 1;
+				visibility: visible;
+				-webkit-transform: scale(1) translate(-50%, -50%);
+				transform: scale(1) translate(-50%, -50%);
+			}
+			
+			.mui-show-loading .mui-spinner {
+				margin-top: 24px;
+				width: 36px;
+				height: 36px;
+			}
+			
+			.mui-show-loading .text {
+				line-height: 1.6;
+				font-family: -apple-system-font, "Helvetica Neue", sans-serif;
+				font-size: 14px;
+				margin: 10px 0 0;
+				color: #fff;
+			}
+			
+			.mui-show-loading-mask {
+				position: fixed;
+				z-index: 1000;
+				top: 0;
+				right: 0;
+				left: 0;
+				bottom: 0;
+			}
+			
+			.mui-show-loading-mask-hidden {
+				display: none !important;
+			}
+			
+			#survey /deep/ .van-popup {
+				max-height: 45% !important;
+			}
+			
+			#survey /deep/ .van-dropdown-menu {
+				height: 41px !important;
+			}
+			
+			.tripList_root {
+				top: 0px;
+				left: 0px;
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				position: fixed;
+				z-index: 0;
+			}
+			
+			.mui-btn {
+				font-size: 16px;
+				padding: 8px;
+				margin: 3px;
+			}
+			
+			h5.mui-content-padded {
+				margin-left: 3px;
+				margin-top: 20px !important;
+			}
+			
+			h5.mui-content-padded:first-child {
+				margin-top: 12px !important;
+			}
+			
+			.ui-alert {
+				text-align: center;
+				padding: 20px 10px;
+				font-size: 16px;
+			}
+			
+			#triangle-down {
+				width: 0;
+				height: 0;
+				border-left: 5px solid transparent;
+				border-right: 5px solid transparent;
+				border-top: 5px solid black;
+				position: absolute;
+				top: 19px;
+				left: 85%;
+			}
+			
+			#triangle-downs {
+				width: 0;
+				height: 0;
+				border-left: 5px solid transparent;
+				border-right: 5px solid transparent;
+				border-top: 5px solid black;
+				position: absolute;
+				top: 19px;
+				left: 95%;
+			}
+			
+			.mui-btn-blue {
+				border: 1px solid #12B482;
+				background-color: #12B482;
+			}
+			
+			.overtime {
+				color: #FE6262 !important;
+			}
+			
+			.yellowsTime {
+				color: #FE9B62 !important;
+			}
+			
+			.upgra {
+				width: 75%;
+				background: #12B482;
+				position: absolute;
+				left: 50%;
+				top: 45%;
+				height: 370px;
+				transform: translate(-50%, -50%);
+				border-radius: 10px 10px 50px 50px;
+				display: none;
+				z-index: 9999;
+			}
+			
+			.upgra-box {
+				width: 100%;
+				margin-top: 110px;
+				z-index: 10;
+				text-align: center;
+				font-size: 15px;
+				color: #666666;
+				position: relative;
+				height: 263px;
+			}
+			
+			.upgra-div {
+				background: #12B482;
+				color: white;
+				width: 80%;
+				height: 40px;
+				line-height: 40px;
+				position: absolute;
+				left: 40%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+				border-radius: 10px;
+			}
+			
+			.overflow-hidden {
+				overflow: hidden;
+			}
+			
+			.mui-backdrop {
+				background-color: rgba(0, 0, 0, 0.8);
+			}
+			
+			.progress {
+				overflow: hidden;
+				height: 20px;
+				margin-bottom: 10px;
+				margin-top: 20px;
+				background-color: #f7f7f7;
+				background-image: -moz-linear-gradient(top, #f5f5f5, #f9f9f9);
+				background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f5f5), to(#f9f9f9));
+				background-image: -webkit-linear-gradient(top, #f5f5f5, #f9f9f9);
+				background-image: -o-linear-gradient(top, #f5f5f5, #f9f9f9);
+				background-image: linear-gradient(to bottom, #f5f5f5, #f9f9f9);
+				background-repeat: repeat-x;
+				filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', endColorstr='#fff9f9f9', GradientType=0);
+				-webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+				-moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+				box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+				-webkit-border-radius: 4px;
+				-moz-border-radius: 4px;
+				border-radius: 10px;
+				width: 100%;
+				margin-right: 12px;
+			}
+			
+			.progress .bar {
+				width: 0%;
+				height: 100%;
+				color: #ffffff;
+				float: left;
+				font-size: 12px;
+				text-align: center;
+				align-items: center;
+				display: flex;
+				justify-content: center;
+				text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+				background-color: #12b482;
+				background-image: -moz-linear-gradient(top, #12b482, #4cd964);
+				background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#12b482), to(#4cd964));
+				background-image: -webkit-linear-gradient(top, #12b482, #4cd964);
+				background-image: -o-linear-gradient(top, #12b482, ##4cd964);
+				background-image: linear-gradient(to bottom, #12b482, ##4cd964);
+				background-repeat: repeat-x;
+				filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff149bdf', endColorstr='#ff0480be', GradientType=0);
+				-webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+				-moz-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+				box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+				-webkit-box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				box-sizing: border-box;
+				-webkit-transition: width 0.6s ease;
+				-moz-transition: width 0.6s ease;
+				-o-transition: width 0.6s ease;
+				transition: width 0.6s ease;
+				border-radius: 10px;
+			}
+			
+			.mui-checkbox input[type=checkbox]:checked:before,
+			.mui-radio input[type=radio]:checked:before {
+				color: #f44 !important;
+			}
+			
+			.iszhixing {
+				width: 105px;
+				height: 30px;
+				background: rgba(19, 180, 130, 1);
+				line-height: 30px;
+				text-align: center;
+				font-size: 14px;
+				color: white;
+				border-radius: 2px;
+				margin-top: 10px;
+				float: right;
+				margin-right: 15px;
+			}
+			
+			.iszhixingno {
+				background: #F85D57 !important;
+			}
+			
+			.isqinagzhi {
+				background: rgba(231, 247, 255, 1);
+				border-radius: 5px;
+				padding: 0px 7px;
+				position: absolute;
+				bottom: 13px;
+				right: 20%;
+				font-size: 10px;
+				width: 80px;
+				text-align: center;
+			}
+			.anxuzhixing{
+				background:rgba(231,247,255,1);
+				border-radius: 5px;
+				padding:0px 7px;
+				position: absolute;
+				bottom: 13px;
+				right: 20%;
+				font-size: 10px;
+				width: 60px;
+				text-align: center;
+			}
+			.anxuzhixings{
+				background:rgba(231,247,255,1);
+				border-radius: 5px;
+				padding:0px 7px;
+				position: absolute;
+				right: 20%;
+				font-size: 10px;
+				width: 60px;
+				text-align: center;
+				top: 107px;
+			}
+		</style>
+	</head>
+
+	<body id="plan">
+		<div class="upgra" id="updaApp" catchtouchmove='nomove'>
+			<img src="../img/upda.png" style="width: 100%;height: auto;position: fixed;bottom: 0;z-index: -1; display: block;" />
+			<div style="width: 100%;padding: 0px 20px;">
+				<div class="upgra-box">
+					<van-circle v-model="currentRate" :rate="30" :speed="100" :text="text" />
+					<span style="color: #12B482;font-weight: 600;font-size: 18px;">发现新版本</span>
+					<div style="margin-top: 13px;color: #12B482;font-weight: 600;font-size: 18px;">
+						<span id="vercode"></span>
+					</div>
+					<div style="text-align: left;margin-top: 10px;">
+						<div>
+							更新内容
+						</div>
+						<div style="margin-top: 10px;" id="updacont">
+
+						</div>
+						<div style="margin-top: 10px;display: none;" id="updacont2">
+
+						</div>
+						<div style="margin-top: 10px;" id="updacont3">
+							<div class="mui-input-row mui-checkbox  mui-left">
+								<label style="font-size: 14px;">忽略该版本并不再提醒</label>
+								<input name="checkbox1" value="noudapp" type="checkbox" class="noupdaapp">
+							</div>
+						</div>
+					</div>
+					<div id="jindutiao" style="display: none;">
+						<div class="progress">
+							<span class="bar" style="width: 0%;" id="jindu"></span>
+						</div>
+						<div style="width: 100%;color: #12B482;margin-top: 5%;">
+							<div style="float: left;margin-left: 10%;">
+								<span id="size01"></span>/
+								<span id="size02"></span>
+							</div>
+							<span id="jinduNumber"></span>
+						</div>
+					</div>
+					<div style="width: 100%;height: 40px;margin: 20px 0px;display: flex;position: absolute;bottom: 0;" id="gengxin">
+						<div style="flex: 1;position: relative;">
+							<div class="upgra-div" style="background: #DDDDDD;" id="noupda">
+								下次再说
+							</div>
+						</div>
+						<div style="flex: 1;position: relative;">
+							<div class="upgra-div" style="left: 60%;" id="appupda">
+								立即更新
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="accreditShow" style="display: none;">
+			<img src="../img/isacc.png" width="100%" />
+		</div>
+		<div class="mui-content" style="height: 100%;" id="plants">
+			<div id="surveyAll">
+				<div id="survey" style="position: relative;">
+					<div style="height: 42px;background: white;width: 100%;text-align: center;float: left;" id="showUserPicker">
+						<div id="isNameShow">
+							<span style="line-height: 45px;font-size: 14px;position: absolute;left: 10px" id="baseNameShow">批次显示:</span>
+							<span id="baseName" style="line-height: 45px;font-size: 14px;">全部</span>
+							<div id="triangle-down"></div>
+						</div>
+						<div id="isNameShows" style="display: none;line-height: 45px;font-size: 14px;">
+							<div style="width: 35%;float: left;" id="basename01"></div>
+							<div style="width: 65%;float: left;" id="basename02"></div>
+							<!--<div id="triangle-downs"></div>-->
+						</div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item mui-control-rightMar mui-active" href="#item1" @tap="switch_page(1)">待处理</a>
+					<a class="mui-control-item mui-control-rightMar" href="#item2" @tap="switch_page(2)">未执行</a>
+					<a class="mui-control-item mui-control-rightMar" href="#item3" @tap="switch_page(3)">已执行</a>
+					<a class="mui-control-item" href="#item4" @tap="switch_page(4)">所有工单</a>
+				</div>
+			</div>
+			<div style="height: 100%;margin-top: 84px;padding: 10px 20px;margin-bottom: 50px;display: none;" id="plantAlls">
+				<div id="plantAl">
+					<div id="item1" class="mui-control-content mui-active" style="height: 100%;">
+						<div>
+							<div class="cardAll" v-for="(datas,index) in userOrder" v-if="userOrder!=[]">
+								<a href="javascript:;" :data-guid="datas.id" @tap="open_detail(datas)">
+									<div style="float: left;width: 85%;height: 100%;padding: 10px 0px 10px 20px;">
+										<div style="color: #333333;font-size: 16px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+											<span>{{datas.farmingItem.farmingName}}</span>
+										</div>
+										<div style="margin: 8px 0px;font-size: 16px;color:rgba(102,102,102,1);position: relative;">
+											<img src="../img/plant005.png" style="width: 18px;height: 100%;position: absolute;" /><span style="margin-left: 27px;">{{datas.executionTime}}</span>
+										</div>
+										<div style="margin: 13px 0px 17px 0px;font-size: 16px;color:rgba(102,102,102,1);position: relative;">
+											<img src="../img/plant006.png" style="width: 18px;height: 100%;position: absolute;" /><span style="margin-left: 27px;">{{datas.endTime}}</span>
+										</div>
+										<div style="width: 100%;height: 20px;font-size: 10px;margin-top: -4px;">
+											<div style="background:rgba(231,247,255,1);float: left;border-radius: 5px;margin-right: 10px;padding:0px 7px;">{{datas.baseName}}</div>
+											<div style="background:rgba(231,247,255,1);float: left;border-radius: 5px;padding:0px 7px;">{{datas.batchName}}</div>
+										</div>
+									</div>
+									<div style="float: right;width: 15%;height: 100%;padding: 10px 20px 10px 0px;position: relative;">
+										<div class="anxuzhixing" v-if="datas.sequExecute">按序执行</div>
+										<img :src="getsrcs(datas.status.code)" style="position: absolute;width: 71px;top: 0px;right: 0px;" />
+									</div>
+								</a>
+							</div>
+							<div v-if="userOrder==''" class="isuserOrder">
+								<span>暂无数据</span>
+							</div>
+						</div>
+					</div>
+					<div id="item2" class="mui-control-content" style="height: 100%;">
+						<div>
+							<div v-if="getguoqi(datas.endTime,datas.status.code)" :class="!datas.allowedExecute?'cardAlls':'cardAll'" v-for="(datas,index) in userOrder" v-if="userOrder!=[]">
+								<a href="javascript:;" :data-guid="datas.id" @tap="open_detail(datas)">
+									<div style="float: left;width:85%;height: 100%;padding: 10px 0px 10px 20px;">
+										<div style="font-size: 16px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+											<span>{{datas.farmingItem.farmingName}}</span>
+										</div>
+										<div style="position: relative;">
+											<div style="margin: 8px 0px;font-size: 16px;color:rgba(102,102,102,1);position: relative;">
+												<img src="../img/plant005.png" style="width: 18px;height: 100%;position: absolute;" /><span style="margin-left: 27px;">{{datas.executionTime}}</span>
+											</div>
+											<div style="margin: 13px 0px 17px 0px;font-size: 16px;color:rgba(102,102,102,1);position: relative;">
+												<img src="../img/plant006.png" style="width: 18px;height: 100%;position: absolute;" /><span style="margin-left: 27px;">{{datas.endTime}}</span>
+											</div>
+										</div>
+										<div style="width: 100%;height: 20px;font-size: 10px;margin-top: -4px;position: relative;">
+											<div style="background:rgba(231,247,255,1);float: left;border-radius: 5px;margin-right: 10px;padding:0px 7px;">{{datas.baseName}}</div>
+											<div style="background:rgba(231,247,255,1);float: left;border-radius: 5px;padding:0px 7px;">{{datas.batchName}}</div>
+										</div>
+									</div>
+									<div style="float: right;width: 15%;height: 100%;padding: 10px 20px 10px 0px;position: relative;">
+										<div :class="!datas.allowedExecute?'anxuzhixings':'anxuzhixing'" class="" v-if="datas.sequExecute">按序执行</div>
+										<img src="../img/plant007.png" style="position: absolute;width: 71px;top: 0px;right: 0px;" />
+										<div v-if="datas.allowedExecute" class="isqinagzhi">无执行限制</div>
+									</div>
+									<div class="iszhixingbox" v-if="!datas.allowedExecute">
+										<div :class="getisnos(datas)?'iszhixing iszhixingno':'iszhixing'" @tap="open_orders(datas)" v-html="open_oredrstr(datas)"></div>
+									</div>
+								</a>
+							</div>
+							<div v-if="!getguoqi(datas.endTime,datas.status.code)" :class="!datas.allowedExecute&&!getweidao(datas.executionTime,datas.status.code)?'cardAlls':'cardAll'" v-for="(datas,index) in userOrder" v-if="userOrder!=[]">
+								<a href="javascript:;" :data-guid="datas.id" @tap="open_detail(datas)">
+									<div style="float: left;width:85%;height: 100%;padding: 10px 0px 10px 20px;">
+										<div style="color: #333333;font-size: 16px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+											<span>{{datas.farmingItem.farmingName}}</span>
+										</div>
+										<div style="position: relative;">
+											<div style="margin: 8px 0px;font-size: 16px;color:rgba(102,102,102,1);position: relative;">
+												<img src="../img/plant005.png" style="width: 18px;height: 100%;position: absolute;" /><span style="margin-left: 27px;">{{datas.executionTime}}</span>
+											</div>
+											<div style="margin: 13px 0px 17px 0px;font-size: 16px;color:rgba(102,102,102,1);position: relative;">
+												<img src="../img/plant006.png" style="width: 18px;height: 100%;position: absolute;" /><span style="margin-left: 27px;">{{datas.endTime}}</span>
+											</div>
+										</div>
+										<div style="width: 100%;height: 20px;font-size: 10px;margin-top: -4px;">
+											<div style="background:rgba(231,247,255,1);float: left;border-radius: 5px;margin-right: 10px;padding:0px 7px;">{{datas.baseName}}</div>
+											<div style="background:rgba(231,247,255,1);float: left;border-radius: 5px;padding:0px 7px;">{{datas.batchName}}</div>
+										</div>
+									</div>
+									<div style="float: right;width: 15%;height: 100%;padding: 10px 20px 10px 0px;position: relative;">
+										<div :class="!datas.allowedExecute?'anxuzhixings':'anxuzhixing'" v-if="datas.sequExecute">按序执行</div>
+										<img :src="getsrcs(datas.status.code)" style="position: absolute;width: 71px;top: 0px;right: 0px;" />
+										<img v-if="getweidao(datas.executionTime,datas.status.code)" src="../img/plant008.png" style="position: absolute;width: 50px;bottom:10%;right: 25%;" />
+										<!--<div v-if="!getweidao(datas.executionTime,datas.status.code)">{{datas.allowedExecute}}</div>-->
+										<div v-if="datas.allowedExecute" class="isqinagzhi">无执行限制</div>
+									</div>
+									<div class="iszhixingbox" v-if="!datas.allowedExecute&&!getweidao(datas.executionTime,datas.status.code)">
+										<div  :class="getisnos(datas)?'iszhixing iszhixingno':'iszhixing'" @tap="open_orders(datas)" v-html="open_oredrstr(datas)"></div>
+									</div>
+								</a>
+							</div>
+							<div v-if="userOrder==''" class="isuserOrder">
+								<span>暂无数据</span>
+							</div>
+						</div>
+					</div>
+					<div id="item3" class="mui-control-content" style="height: 100%;">
+						<div>
+							<div :class="!datas.allowedExecute&&datas.status.code!='AUDIT_APPROVAL'?'cardAlls':'cardAll'" v-for="(datas,index) in userOrder" v-if="userOrder!=[]">
+								<a href="javascript:;" :data-guid="datas.id" @tap="open_detail(datas)">
+									<div style="float: left;width: 85%;height: 100%;padding: 10px 0px 10px 20px;">
+										<div style="color: #333333;font-size: 16px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+											<span>{{datas.farmingItem.farmingName}}</span>
+										</div>
+										<div style="position: relative;">
+											<div style="margin: 8px 0px;font-size: 16px;color:rgba(102,102,102,1);position: relative;">
+												<img src="../img/plant005.png" style="width: 18px;height: 100%;position: absolute;" /><span style="margin-left: 27px;">{{datas.executionTime}}</span>
+											</div>
+											<div style="margin: 13px 0px 17px 0px;font-size: 16px;color:rgba(102,102,102,1);position: relative;">
+												<img src="../img/plant006.png" style="width: 18px;height: 100%;position: absolute;" /><span style="margin-left: 27px;">{{datas.endTime}}</span>
+											</div>
+										</div>
+										<div style="width: 100%;height: 20px;font-size: 10px;margin-top: -4px;">
+											<div style="background:rgba(231,247,255,1);float: left;border-radius: 5px;margin-right: 10px;padding:0px 7px;">{{datas.baseName}}</div>
+											<div style="background:rgba(231,247,255,1);float: left;border-radius: 5px;padding:0px 7px;">{{datas.batchName}}</div>
+										</div>
+									</div>
+									<div style="float: right;width: 15%;height: 100%;padding: 10px 20px 10px 0px;position: relative;">
+										<div :class="!datas.allowedExecute?'anxuzhixings':'anxuzhixing'" v-if="datas.sequExecute">按序执行</div>
+										<img :src="getsrcs(datas.status.code)" style="position: absolute;width: 71px;top: 0px;right: 0px;" />
+										<div v-if="datas.allowedExecute" class="isqinagzhi">无执行限制</div>
+									</div>
+									<div class="iszhixingbox" v-if="!datas.allowedExecute&&datas.status.code!='AUDIT_APPROVAL'">
+										<div  :class="getisnos(datas)?'iszhixing iszhixingno':'iszhixing'" @tap="open_orders(datas)" v-html="open_oredrstr(datas)"></div>
+									</div>
+								</a>
+							</div>
+							<div v-if="userOrder==''" class="isuserOrder">
+								<span>暂无数据</span>
+							</div>
+						</div>
+					</div>
+					<div id="item4" class="mui-control-content" style="height: 100%;">
+						<div>
+							<div v-if="getguoqi(datas.endTime,datas.status.code)" :class="!datas.allowedExecute?'cardAlls':'cardAll'" v-for="(datas,index) in userOrder" v-if="userOrder!=[]">
+								<a href="javascript:;" :data-guid="datas.id" @tap="open_detail(datas)">
+									<div style="float: left;width:85%;height: 100%;padding: 10px 0px 10px 20px;">
+										<div style="font-size: 16px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+											<span>{{datas.farmingItem.farmingName}}</span>
+										</div>
+										<div style="position: relative;">
+											<div style="margin: 8px 0px;font-size: 16px;color:rgba(102,102,102,1);position: relative;">
+												<img src="../img/plant005.png" style="width: 18px;height: 100%;position: absolute;" /><span style="margin-left: 27px;">{{datas.executionTime}}</span>
+											</div>
+											<div style="margin: 13px 0px 17px 0px;font-size: 16px;color:rgba(102,102,102,1);position: relative;">
+												<img src="../img/plant006.png" style="width: 18px;height: 100%;position: absolute;" /><span style="margin-left: 27px;">{{datas.endTime}}</span>
+											</div>
+										</div>
+										<div style="width: 100%;height: 20px;font-size: 10px;margin-top: -4px;">
+											<div style="background:rgba(231,247,255,1);float: left;border-radius: 5px;margin-right: 10px;padding:0px 7px;">{{datas.baseName}}</div>
+											<div style="background:rgba(231,247,255,1);float: left;border-radius: 5px;padding:0px 7px;">{{datas.batchName}}</div>
+										</div>
+									</div>
+									<div style="float: right;width: 15%;height: 100%;padding: 10px 20px 10px 0px;position: relative;">
+										<div :class="!datas.allowedExecute?'anxuzhixings':'anxuzhixing'" v-if="datas.sequExecute">按序执行</div>
+										<img src="../img/plant007.png" style="position: absolute;width: 71px;top: 0px;right: 0px;" />
+										<div v-if="datas.allowedExecute" class="isqinagzhi">无执行限制</div>
+									</div>
+									<div class="iszhixingbox" v-if="!datas.allowedExecute">
+										<div  :class="getisnos(datas)?'iszhixing iszhixingno':'iszhixing'" @tap="open_orders(datas)" v-html="open_oredrstr(datas)"></div>
+									</div>
+								</a>
+							</div>
+							<div v-if="!getguoqi(datas.endTime,datas.status.code)" :class="!datas.allowedExecute&&datas.status.code!='AUDIT_APPROVAL'&&!getweidao(datas.executionTime,datas.status.code)&&getqiangzhis(datas.executionTime,datas.endTime,datas.status.code)?'cardAlls':'cardAll'" v-for="(datas,index) in userOrder" v-if="userOrder!=[]">
+								<a href="javascript:;" :data-guid="datas.id" @tap="open_detail(datas)">
+									<div style="float: left;width: 85%;height: 100%;padding: 10px 0px 10px 20px;">
+										<div style="color: #333333;font-size: 16px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+											<span>{{datas.farmingItem.farmingName}}</span>
+										</div>
+										<div style="position: relative;">
+											<div style="margin: 8px 0px;font-size: 16px;color:rgba(102,102,102,1);position: relative;">
+												<img src="../img/plant005.png" style="width: 18px;height: 100%;position: absolute;" /><span style="margin-left: 27px;">{{datas.executionTime}}</span>
+											</div>
+											<div style="margin: 13px 0px 17px 0px;font-size: 16px;color:rgba(102,102,102,1);position: relative;">
+												<img src="../img/plant006.png" style="width: 18px;height: 100%;position: absolute;" /><span style="margin-left: 27px;">{{datas.endTime}}</span>
+											</div>
+										</div>
+										<div style="width: 100%;height: 20px;font-size: 10px;margin-top: -4px;">
+											<div style="background:rgba(231,247,255,1);float: left;border-radius: 5px;margin-right: 10px;padding:0px 7px;">{{datas.baseName}}</div>
+											<div style="background:rgba(231,247,255,1);float: left;border-radius: 5px;padding:0px 7px;">{{datas.batchName}}</div>
+										</div>
+									</div>
+									<div style="float: right;width: 15%;height: 100%;padding: 10px 20px 10px 0px;position: relative;">
+										<div :class="!datas.allowedExecute?'anxuzhixings':'anxuzhixing'" v-if="datas.sequExecute">按序执行</div>
+										<img :src="getsrcs(datas.status.code)" style="position: absolute;width: 71px;top: 0px;right: 0px;" />
+										<img v-if="getweidao(datas.executionTime,datas.status.code)" src="../img/plant008.png" style="position: absolute;width: 50px;bottom:10%;right: 25%;" />
+										<div v-if="datas.allowedExecute" class="isqinagzhi">无执行限制</div>
+									</div>
+									<div class="iszhixingbox" v-if="!datas.allowedExecute&&datas.status.code!='AUDIT_APPROVAL'&&!getweidao(datas.executionTime,datas.status.code)&&getqiangzhis(datas.executionTime,datas.endTime,datas.status.code)">
+										<div  :class="getisnos(datas)?'iszhixing iszhixingno':'iszhixing'" @tap="open_orders(datas)" v-html="open_oredrstr(datas)"></div>
+									</div>
+								</a>
+							</div>
+							<div v-if="userOrder==''" class="isuserOrder">
+								<span>暂无数据</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/libs/vue.min.js"></script>
+		<script type="text/javascript" src="../js/index.js"></script>
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.1/lib/index.css">
+
+		<!-- 引入组件 -->
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vant@2.1/lib/vant.min.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script type="text/javascript" src="../js/libs/mui.picker.min.js"></script>
+		<script type="text/javascript" src="../js/libs/jquery-1.11.0.min.js"></script>
+		<script>
+			var mask = mui.createMask(); //遮罩层
+			var Vue = window.Vue;
+			var vant = window.vant;
+			Vue.use(vant.Lazyload).use(vant.DropdownMenu).use(vant.DropdownItem)
+			var code = "";
+			var isCode = '1';
+			var batchIds = "-1";
+			var isnetworkinfo = "";
+			mask.show();
+			mui.showLoading("正在加载..", "div");
+			
+			setTimeout(()=>{
+				mui.hideLoading();
+				mask.close();
+			},3000)
+
+			var isopendetail = true;
+
+			var ws = "";
+
+			var appUrl = "";
+
+			var pageNo = 1;
+			var pageSize = 5;
+			var lastPage = -1;
+
+			var add_div = document.getElementById("plan");
+
+			mui.init({
+				pullRefresh: {
+					container: "#plantAl", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+					down: {
+						style: 'circle', //必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
+						color: '#2BD009', //可选，默认“#2BD009” 下拉刷新控件颜色
+						height: '50px', //可选,默认50px.下拉刷新控件的高度,
+						range: '100px', //可选 默认100px,控件可下拉拖拽的范围
+						offset: '0px', //可选 默认0px,下拉刷新控件的起始位置
+						auto: false, //可选,默认false.首次加载自动上拉刷新一次
+						callback: pulldownRefresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+					},
+					up: {
+						height: 40, //可选.默认50.触发上拉加载拖动距离
+						auto: false, //可选,默认false.自动上拉加载一次
+						contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
+						contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容
+						callback: pullupRefresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据
+					}
+				}
+			});
+
+			var plants = new Vue({
+				el: '#plants',
+				data: {
+					appSize: 0,
+					workOrder: [],
+					userOrder: [],
+					batchOrder: [],
+					baseOrder: [],
+					value1: -1,
+					option1: [{
+						text: '全部',
+						value: -1,
+						children: [{
+							text: '全部',
+							value: -1
+						}]
+					}],
+					isFirst: false,
+					nowTime: ''
+				}
+			});
+
+			var flag = false;
+
+			var masks = mui.createMask(function() {
+				//设置点击蒙板不会自动消失
+				//但调用close方法关闭mask时，必须返回true
+				return flag;
+			});
+
+			document.getElementById('updaApp').addEventListener('touchmove', function(e) {
+				e.preventDefault();
+			}, false);
+
+			mui.plusReady(function() {
+				var isupdaapp = localStorage.getItem("noudapp");
+				if(isupdaapp == null) {
+					plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+						svn(inf.version);
+					})
+				}
+
+				//获取用户id
+				var userid = -1
+				ajaxs(getUserInfo, 'get').then(function(res) {
+					if(res.success) {
+						userid = res.result.uid;
+					}
+					sendcid(userid);
+				}).catch(function(error) {
+
+				})
+
+				var accredit = localStorage.getItem("accredit");
+				if(accredit == "false") {
+					document.getElementById("plants").style.display = "none";
+					document.getElementById("accreditShow").style.display = "block";
+					return;
+				}
+				var istokens = localStorage.getItem("tokens");
+				if(istokens == null) {
+					mui.openWindow({
+						url: '../login.html',
+						id: '../login'
+					})
+				} else {
+					document.getElementById('plantAlls').style.display = 'block';
+					document.addEventListener("netchange", function() {
+						var nt = plus.networkinfo.getCurrentType();
+						switch(nt) {
+							case plus.networkinfo.CONNECTION_ETHERNET:
+							case plus.networkinfo.CONNECTION_WIFI:
+							case plus.networkinfo.CONNECTION_CELL2G:
+							case plus.networkinfo.CONNECTION_CELL3G:
+							case plus.networkinfo.CONNECTION_CELL4G:
+								ajaxs(getWorkOrderStatusEnum, 'get').then(function(response) {
+									plants.workOrder = response.result;
+									if(plants.workOrder[0]) {
+										code = plants.workOrder[2].code;
+										ajaxs(getUserOrder + "?status=" + plants.workOrder[2].code, 'get').then(function(response) {
+											if(response.result.list != "" && response.result.list != undefined) {
+												plants.userOrder = response.result.list;
+											}
+											if(response.result == []) {
+
+											}
+											if(response.result) {
+												lastPage = response.result.lastPage
+											}
+										}).catch(function(error) {
+											console.log(error)
+										})
+									}
+								}).catch(function(error) {
+
+								})
+								ajaxs(getBaseTreeByUid, 'get').then(function(response) {
+									plants.batchOrder = response.result;
+									if(plants.batchOrder.length > 0) {
+										for(let index in plants.batchOrder) {
+											plants.option1.push({
+												text: plants.batchOrder[index].name,
+												value: plants.batchOrder[index].id,
+											});
+											var indexNum = parseInt(index + 1);
+											if(plants.batchOrder[index].children != null && plants.batchOrder[index].children != []) {
+												plants.option1[indexNum].children = [];
+												for(let i = 0; i < plants.batchOrder[index].children.length; i++) {
+													plants.option1[indexNum].children.push({
+														text: plants.batchOrder[index].children[i].batchName,
+														value: plants.batchOrder[index].children[i].id,
+													});
+												}
+											}
+										}
+									}
+								}).catch(function(error) {
+
+								})
+								break;
+							default:
+								break;
+						}
+					}, false);
+					var types = {};
+					types[plus.networkinfo.CONNECTION_UNKNOW] = "未知";
+					types[plus.networkinfo.CONNECTION_NONE] = "未连接网络";
+					types[plus.networkinfo.CONNECTION_ETHERNET] = "有线网络";
+					types[plus.networkinfo.CONNECTION_WIFI] = "WiFi网络";
+					types[plus.networkinfo.CONNECTION_CELL2G] = "2G蜂窝网络";
+					types[plus.networkinfo.CONNECTION_CELL3G] = "3G蜂窝网络";
+					types[plus.networkinfo.CONNECTION_CELL4G] = "4G蜂窝网络";
+					var str = types[plus.networkinfo.getCurrentType()];
+					if(str == "未连接网络") {
+						return;
+					}
+					ajaxs(getWorkOrderStatusEnum, 'get').then(function(response) {
+						plants.workOrder = response.result;
+						if(plants.workOrder[0]) {
+							code = plants.workOrder[2].code;
+							ajaxs(getUserOrder + "?status=" + plants.workOrder[2].code, 'get').then(function(response) {
+								if(response.result.list && response.result.list != undefined) {
+									plants.userOrder = response.result.list;
+								}
+								if(response.result == []) {
+
+								}
+								if(response.result) {
+									lastPage = response.result.lastPage
+								}
+							}).catch(function(error) {
+
+							})
+						}
+					}).catch(function(error) {
+
+					})
+					var isreturn = "";
+					ajaxs(getBaseTreeByUid, 'get').then(function(response) {
+						plants.batchOrder = response.result;
+						if(plants.batchOrder.length > 0) {
+							for(let index in plants.batchOrder) {
+								plants.option1.push({
+									text: plants.batchOrder[index].name,
+									value: plants.batchOrder[index].id,
+								});
+								var indexNum = parseInt(index) + 1;
+								if(plants.batchOrder[index].children != null && plants.batchOrder[index].children != []) {
+									plants.option1[indexNum].children = [];
+									for(let i = 0; i < plants.batchOrder[index].children.length; i++) {
+										plants.option1[indexNum].children.push({
+											text: plants.batchOrder[index].children[i].batchName,
+											value: plants.batchOrder[index].children[i].id,
+										});
+									}
+								}
+							}
+						}
+					}).catch(function(error) {
+						var info = JSON.parse(error.responseText)
+						if(info.message == "Token失效，请重新登录") {
+							mui.toast("请重新登录")
+							localStorage.clear();
+							mui.openWindow({
+								url: '../login.html',
+								id: '../login',
+								waiting: {
+									autoShow: false, //自动显示等待框，默认为true
+								}
+							});
+							plus.webview.currentWebview().opener().hide();
+							plus.webview.currentWebview().opener().close();
+							setTimeout(function() {
+								plus.webview.currentWebview().hide();
+								plus.webview.currentWebview().close();
+							}, 100);
+						}
+						isreturn = "true";
+						return;
+					})
+				}
+
+				document.getElementById('noupda').addEventListener('tap', function() {
+					document.getElementById('updaApp').style.display = 'none';
+					var main = plus.webview.currentWebview().opener();
+					mui.fire(main, 'closeMask', {});
+					flag = true;
+					plus.webview.currentWebview().setPullToRefresh({
+						support: true,
+						style: "circle"
+					})
+					var isup = getRadioRes("noupdaapp");
+					if(isup == 'noudapp') {
+						localStorage.setItem('noudapp', true);
+					}
+					masks.close();
+					pulldownRefresh();
+				})
+
+				document.getElementById('appupda').addEventListener('tap', function() {
+					document.getElementById('gengxin').style.display = 'none'
+					document.getElementById('jindutiao').style.display = 'block'
+					document.getElementById('updacont3').style.display = 'none'
+					var url = appUrl; // 下载文件地址   
+					var dtask = plus.downloader.createDownload(url, {}, function(d, status) {
+						if(status == 200) { // 下载成功   
+							var path = d.filename;
+							console.log(d.filename);
+							plus.runtime.install(path);
+						} else { //下载失败   
+							alert("版本更新失败:" + status);
+						}
+					});
+					var sizes = 0;
+					dtask.addEventListener("statechanged", function(task, status) {
+
+						if(task.state == 0) {} else if(task.state == 2) {
+
+						} else if(task.state == 3) {
+							var sizeApp = task.downloadedSize / task.totalSize * 100;
+							document.getElementById('jinduNumber').innerText = (parseInt(sizeApp)) + '%';
+							document.getElementById('jindu').style.width = (parseInt(sizeApp)) + '%';
+							var size01 = (task.downloadedSize / 1024 / 1024).toFixed(2);
+							var size02 = (task.totalSize / 1024 / 1024).toFixed(2);
+							document.getElementById('size01').innerText = (size01) + 'M';
+							document.getElementById('size02').innerText = (size02) + 'M';
+						} else if(task.state == 4) {
+
+						}
+					})
+					dtask.start();
+				})
+			})
+
+			function getRadioRes(className) {
+				var rdsObj = document.getElementsByClassName(className);
+				var chackVal = null;
+				for(i = 0; i < rdsObj.length; i++) {
+					if(rdsObj[i].checked) {
+						chackVal = rdsObj[i].value;
+					}
+				}
+				return chackVal;
+			}
+			
+			function getisnos(datas){
+				if(datas.agree){
+					if(datas.agree.displayName=='不同意'){
+						return true;
+					}
+				}
+				return false;
+			}
+
+			function getsrcs(code) {
+				if(code == "AUDIT_FAILED") {
+					return "../img/plant003.png"
+				} else if(code == "AUDIT_APPROVAL") {
+					return "../img/plant002.png"
+				} else if(code == "NOT_AUDITED") {
+					return "../img/plant001.png"
+				} else if(code == "UNEXECUTED") {
+					return "../img/plant004.png"
+				}
+			}
+
+			//检查自动更新   
+			function svn(t) {
+				var xhr_svn = new plus.net.XMLHttpRequest();
+				xhr_svn.onreadystatechange = function() {
+					if(xhr_svn.readyState == 4) {
+						if(xhr_svn.status == 200) {
+							var res = JSON.parse(xhr_svn.responseText);
+							if(res.state == 'yes') {
+								console.log(t);
+								if(res.mark != t) {
+									var upr;
+									var main = plus.webview.currentWebview().opener();
+									/*plus.webview.currentWebview().setPullToRefresh({
+										support: false
+									});*/
+									plus.webview.currentWebview().setPullToRefresh({
+										support: false
+									});
+									mui.fire(main, 'openMask', {});
+									masks.show();
+									setTimeout(function() {
+										document.getElementById('updaApp').style.display = 'block';
+										document.getElementById('vercode').innerText = 'V' + res.mark;
+										var contents = res.updateContent.split(",");
+										document.getElementById('updacont').innerText = contents[0];
+										if(contents.length == 2) {
+											document.getElementById('updacont2').innerText = contents[1];
+											document.getElementById('updacont2').style.display = 'block'
+										}
+										appUrl = res.url;
+									}, 300);
+									/*plus.nativeUI.confirm("有新版本发布了，是否更新？", function(e) {
+										upr = (e.index == 0) ? "Y" : "N";
+										//                          console.log(upr);   
+										if(upr == "Y") {
+											var wt = plus.nativeUI.showWaiting('下载更新中，请勿关闭');
+											var url = res.url; // 下载文件地址   
+											var dtask = plus.downloader.createDownload(url, {}, function(d, status) {
+												if(status == 200) { // 下载成功   
+													var path = d.filename;
+													console.log(d.filename);
+													plus.runtime.install(path);
+												} else { //下载失败   
+													alert("版本更新失败: " + status);
+												}
+											});
+											dtask.addEventListener("statechanged", onStateChanged, true);
+											dtask.setRequestHeader('Content-Type', 'application/json');
+											dtask.start();
+										} else {
+
+										}
+									}, "软件更新", ["确认", "取消"]);*/
+
+								} else {
+									console.log('最新');
+								}
+							}
+						} else {
+							plus.nativeUI.toast("网络连接错误！");
+						}
+					}
+				}
+				xhr_svn.open("GET", "http://app.scddwb.com/update.json"); //这里的地址是上面json文件的地址   
+				xhr_svn.send();
+			}
+
+			function changes(values, value) {
+				mui('#plantAl').pullRefresh().refresh(true);
+				mui('#plantAl').pullRefresh().enablePullupToRefresh();
+				pageNo = 1;
+				batchIds = value;
+				if(values != "-1") {
+					ajaxs(getUserOrder + "?status=" + code + "&batchId=" + batchIds, 'get').then(function(response) {
+						if(response.result.list && response.result.list != undefined) {
+							plants.userOrder = response.result.list;
+						}
+						if(response.result == []) {
+
+						}
+						if(response.result.list.length < 5) {
+							mui('#plantAl').pullRefresh().disablePullupToRefresh();
+						}
+						if(response.result) {
+							lastPage = response.result.lastPage
+						}
+					}).catch(function(error) {
+
+					})
+				} else {
+					ajaxs(getUserOrder + "?status=" + code, 'get').then(function(response) {
+						if(response.result.list && response.result.list != undefined) {
+							plants.userOrder = response.result.list;
+						}
+						if(response.result == []) {
+
+						}
+						if(response.result.list.length < 5) {
+							mui('#plantAl').pullRefresh().disablePullupToRefresh();
+						}
+						if(response.result) {
+							lastPage = response.result.lastPage
+						}
+					}).catch(function(error) {
+
+					})
+				}
+			}
+
+			function sendcid(userid) {
+				var cid = plus.push.getClientInfo().clientid
+				var data = {
+					userId: userid,
+					cid: cid
+				}
+				localStorage.setItem('userid', userid)
+				localStorage.setItem('cid', cid)
+				ajaxs(addCid, 'post', data).then(function(res) {
+					if(res.success) {
+
+					}
+				}).catch(function(error) {
+
+				})
+			}
+
+			function isopen() {
+				plus.webview.currentWebview().setPullToRefresh({
+					support: false
+				});
+				mui('#plantAl').pullRefresh().endPulldownToRefresh();
+				mui('#plantAl').pullRefresh().setStopped(true);
+			}
+
+			function isclose() {
+				plus.webview.currentWebview().setPullToRefresh({
+					support: true,
+					style: "circle"
+				});
+				mui('#plantAl').pullRefresh().endPulldownToRefresh();
+				mui('#plantAl').pullRefresh().setStopped(false);
+			}
+
+			function getguoqi(time, code) {
+				if(compareDate(time, getdate()) && code == "UNEXECUTED") {
+					return true;
+				}
+				return false;
+			}
+
+			function getweidao(time, code) {
+				if(compareDate(getdate(), time) && code == "UNEXECUTED") {
+					return true;
+				}
+				return false
+			}
+
+			function getqiangzhi(starttime, code) {
+				if(code == "AUDIT_APPROVAL") {
+					return false
+				}
+				return true
+			}
+
+			function getqiangzhis(starttime, endtime, code) {
+				if(compareDates(starttime, getdate()) && compareDates(getdate(), endtime) || code == "AUDIT_APPROVAL" || compareDate(getdate(), starttime)) {
+					return false
+				}
+				return true
+			}
+
+			function getdate() {
+				var day2 = new Date();
+				day2.setTime(day2.getTime());
+				var s2 = day2.getFullYear() + "-" + (day2.getMonth() + 1) + "-" + day2.getDate();
+				return s2;
+			}
+
+			function compareDate(s1, s2) {
+				return((new Date(s1.replace(/-/g, "\/"))) < (new Date(s2.replace(/-/g, "\/"))));
+			}
+
+			function compareDates(s1, s2) {
+				return((new Date(s1.replace(/-/g, "\/"))) <= (new Date(s2.replace(/-/g, "\/"))));
+			}
+
+			/**
+			 *  下拉刷新获取最新信息 
+			 */
+			function pulldownRefresh() {
+				if(window.plus && plus.networkinfo.getCurrentType() === plus.networkinfo.CONNECTION_NONE) {
+					/*plus.nativeUI.toast('似乎已断开与互联网的连接', {
+						verticalAlign: 'top'
+					});*/
+					mui('#plantAl').pullRefresh().endPulldownToRefresh();
+					return;
+				}
+				pageNo = 1;
+				if(code != "" && isCode != "1") {
+					if(batchIds != "-1") {
+						ajaxs(getUserOrder + "?status=" + code + "&batchId=" + batchIds, 'get').then(function(response) {
+							if(response.result.list && response.result.list != undefined) {
+								mui('#plantAl').pullRefresh().refresh(true);
+								mui('#plantAl').pullRefresh().enablePullupToRefresh();
+								plants.userOrder = response.result.list;
+								mui.toast('刷新成功!')
+							}
+							if(response.result == []) {
+
+							}
+							if(response.result.list.length < 5) {
+								mui('#plantAl').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result) {
+								lastPage = response.result.lastPage
+							}
+						}).catch(function(error) {
+
+						})
+					} else {
+						ajaxs(getUserOrder + "?status=" + code, 'get').then(function(response) {
+							if(response.result.list && response.result.list != undefined) {
+								mui('#plantAl').pullRefresh().refresh(true);
+								mui('#plantAl').pullRefresh().enablePullupToRefresh();
+								plants.userOrder = response.result.list;
+								mui.toast('刷新成功!')
+							}
+							if(response.result == []) {
+
+							}
+							if(response.result.list.length < 5) {
+								mui('#plantAl').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result) {
+								lastPage = response.result.lastPage
+							}
+						}).catch(function(error) {
+
+						})
+					}
+				}
+				mui('#plantAl').pullRefresh().endPulldownToRefresh();
+				isCode = "2";
+			}
+
+			//上拉加载
+			function pullupRefresh() {
+				pageNo += 1;
+				if(lastPage == undefined) {
+					mui('#plantAl').pullRefresh().disablePullupToRefresh();
+					return;
+				}
+				if(lastPage < pageNo) {
+					mui('#plantAl').pullRefresh().endPullupToRefresh(true);
+					return;
+				}
+				if(batchIds != "-1") {
+					ajaxs(getUserOrder + "?status=" + code + "&batchId=" + batchIds + "&pageNo=" + pageNo + "&pageSize=" + pageSize, 'get').then(function(response) {
+						if(response.result.list && response.result.list != undefined) {
+							var newArr = response.result.list;
+							plants.userOrder = [...plants.userOrder, ...newArr]
+						}
+						if(response.result == []) {
+
+						}
+						if(response.result) {
+							lastPage = response.result.lastPage
+						}
+						mui('#plantAl').pullRefresh().endPullupToRefresh();
+					}).catch(function(error) {
+
+					})
+				} else {
+					ajaxs(getUserOrder + "?status=" + code + "&pageNo=" + pageNo + "&pageSize=" + pageSize, 'get').then(function(response) {
+						if(response.result.list && response.result.list != undefined) {
+							var newArr = response.result.list;
+							plants.userOrder = [...plants.userOrder, ...newArr]
+						}
+						if(response.result == []) {
+
+						}
+						if(response.result) {
+							lastPage = response.result.lastPage
+						}
+						mui('#plantAl').pullRefresh().endPullupToRefresh();
+					}).catch(function(error) {
+
+					})
+				}
+			}
+
+			/**
+			 * 获取当前日期
+			 */
+			function getNowFormatDate() {
+				var date = new Date();
+				var seperator1 = "-";
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var strDate = date.getDate();
+				if(month >= 1 && month <= 9) {
+					month = "0" + month;
+				}
+				if(strDate >= 0 && strDate <= 9) {
+					strDate = "0" + strDate;
+				}
+				var currentdate = year + seperator1 + month + seperator1 + strDate;
+				return currentdate;
+			}
+
+			var nowTime = getNowFormatDate();
+			plants.nowTime = getNowFormatDate();
+
+			function DateDiff(sDate1, sDate2) { //sDate1和sDate2是2006-12-18格式  
+				var aDate, oDate1, oDate2, iDays;
+				aDate = sDate1.split("-");
+				oDate1 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0]); //转换为12-18-2006格式  
+				aDate = sDate2.split("-");
+				oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0]);
+				iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 24 / 60 / 60); //把相差的毫秒数转换为天数  
+				return iDays;
+			}
+
+			/**
+			 * 对比时间
+			 */
+			function getTime(time) {
+				var day;
+				if(nowTime > time) {
+					day = DateDiff(time, nowTime);
+					return "已过时" + day + "天"
+				} else if(nowTime < time) {
+					day = DateDiff(time, nowTime);
+					return day + "天后开始"
+				} else {
+					return "今天开始"
+				}
+			}
+
+			function CurentTime() {
+				var now = new Date();
+				var year = now.getFullYear(); //年
+				var month = now.getMonth() + 1; //月
+				var day = now.getDate(); //日
+				var hh = now.getHours(); //时
+				var mm = now.getMinutes(); //分
+				var ss = now.getSeconds(); //秒
+				var clock = year + "-";
+				if(month < 10)
+					clock += "0";
+				clock += month + "-";
+				if(day < 10)
+					clock += "0";
+
+				clock += day + " ";
+
+				if(hh < 10)
+					clock += "0";
+
+				clock += hh + ":";
+				if(mm < 10) clock += '0';
+				clock += mm + ":";
+
+				if(ss < 10) clock += '0';
+				clock += ss;
+				return(clock);
+			}
+
+			function timeFn(d1) { //di作为一个变量传进来
+				//如果时间格式是正确的，那下面这一步转化时间格式就可以不用了
+				var dateBegin = new Date(d1.replace(/-/g, "/")); //将-转化为/，使用new Date
+				var dateEnd = new Date(); //获取当前时间
+				var dateDiff = dateEnd.getTime() - dateBegin.getTime(); //时间差的毫秒数
+				if(dateDiff < 0) {
+					dateDiff = Math.abs(dateDiff)
+				}
+				var dayDiff = Math.floor(dateDiff / (24 * 3600 * 1000)); //计算出相差天数
+				var leave1 = dateDiff % (24 * 3600 * 1000) //计算天数后剩余的毫秒数
+				var hours = Math.floor(leave1 / (3600 * 1000)) //计算出小时数
+				//计算相差分钟数
+				var leave2 = leave1 % (3600 * 1000) //计算小时数后剩余的毫秒数
+				var minutes = Math.floor(leave2 / (60 * 1000)) //计算相差分钟数
+				//计算相差秒数
+				var leave3 = leave2 % (60 * 1000) //计算分钟数后剩余的毫秒数
+				var seconds = Math.ceil(leave3 / 1000)
+				if(dayDiff >= 1) {
+					if(dayDiff > 3) {
+						return d1.split(' ')[0]
+					} else {
+						return dayDiff + '天前'
+					}
+				} else if(hours >= 1) {
+					return hours + '小时前'
+				} else if(minutes >= 1) {
+					return minutes + '分钟前'
+				} else if(seconds >= 1) {
+					return seconds + '秒前'
+				}
+				console.log(" 相差 " + dayDiff + "天 " + hours + "小时 " + minutes + " 分钟" + seconds + " 秒")
+				console.log(dateDiff + "时间差的毫秒数", dayDiff + "计算出相差天数", leave1 + "计算天数后剩余的毫秒数", hours + "计算出小时数", minutes + "计算相差分钟数", seconds + "计算相差秒数");
+			}
+
+			/*提交执行时间对比*/
+			function getsubTime(time, val) {
+				if(time != null) {
+					var str = "";
+					if(val == 1) {
+						if(timeFn(time) != undefined) {
+							if(timeFn(time).indexOf("-") != -1) {
+								str = timeFn(time);
+							} else {
+								str = timeFn(time) + "审核";
+							}
+						}
+					} else {
+						if(timeFn(time) != undefined) {
+							if(timeFn(time).indexOf("-") != -1) {
+								str = timeFn(time, 1);
+							} else {
+								str = timeFn(time, 1) + "执行";
+							}
+						}
+					}
+					return str;
+				}
+			}
+
+			function getTimes(time) {
+				var day;
+				if(nowTime > time) {
+					day = DateDiff(time, nowTime);
+					return "暂未执行"
+				} else if(nowTime < time) {
+					day = DateDiff(time, nowTime);
+					return day + "天后开始"
+				} else {
+					return "今天开始"
+				}
+			}
+
+			function getdiffTime(time, nowTime) {
+				var day1 = new Date(time);
+				var day2 = new Date(nowTime);
+				var number = (day1 - day2) / (1000 * 60 * 60 * 24);
+				if(number < 10) {
+					return true;
+				} else {
+					return false
+				}
+			}
+
+			function switch_page(value) {
+				pageNo = 1;
+				window.scrollTo(0, 0, 0);
+				if(value == 1) {
+					code = "AUDIT_FAILED"
+				} else if(value == 2) {
+					code = "UNEXECUTED"
+				} else if(value == 3) {
+					code = "AUDIT_APPROVAL"
+				} else {
+					code = " "
+				}
+				if(batchIds != "-1") {
+					ajaxs(getUserOrder + "?status=" + code + "&batchId=" + batchIds, 'get').then(function(response) {
+						mui('#plantAl').pullRefresh().refresh(true);
+						mui('#plantAl').pullRefresh().enablePullupToRefresh();
+						if(response.result.list && response.result.list != undefined) {
+							mui('#plantAl').pullRefresh().refresh(true);
+							mui('#plantAl').pullRefresh().enablePullupToRefresh();
+							plants.userOrder = response.result.list;
+						}
+						if(response.result == []) {
+
+						}
+						if(response.result.list.length < 5) {
+							mui('#plantAl').pullRefresh().disablePullupToRefresh();
+						}
+						if(response.result) {
+							lastPage = response.result.lastPage
+						}
+					}).catch(function(error) {
+
+					})
+				} else {
+					ajaxs(getUserOrder + "?status=" + code, 'get').then(function(response) {
+						if(response.result.list && response.result.list != undefined) {
+							mui('#plantAl').pullRefresh().refresh(true);
+							mui('#plantAl').pullRefresh().enablePullupToRefresh();
+							plants.userOrder = response.result.list;
+						}
+						if(response.result == []) {
+
+						}
+						if(response.result.list.length < 5) {
+							mui('#plantAl').pullRefresh().disablePullupToRefresh();
+						}
+						if(response.result) {
+							lastPage = response.result.lastPage
+						}
+					}).catch(function(error) {
+
+					})
+				}
+			}
+
+			function open_orders(datas) {
+				isopendetail = false;
+				if(datas.agree != '' && datas.agree != null) {
+					if(datas.agree.displayName == '未处理') {
+						mui.toast('请勿重复申请!')
+						return;
+					}
+				}
+				mui.openWindow({
+					url: 'particularsadd.html',
+					id: 'particularsadd',
+					extras: {
+						data: datas
+					},
+					show: {
+						autoShow: true, //页面loaded事件发生后自动显示，默认为true
+						aniShow: "none", //页面显示动画，默认为”slide-in-right“；
+						duration: "100ms" //页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+					},
+					waiting: {
+						autoShow: false, //自动显示等待框，默认为true
+					}
+				})
+			}
+
+			function open_oredrstr(datas) {
+				if(datas.agree == '' || datas.agree == null) {
+					return '申请再次执行'
+				}
+				return datas.agree.displayName
+			}
+
+			function getisno(datas) {
+				console.log(datas)
+				if(datas.agree != '' || datas.agree != null) {
+					if(datas.agree.displayName == '未处理') {
+						return true;
+					}
+				}
+				return false;
+			}
+
+			function open_detail(item) {
+				if(!isopendetail) {
+					isopendetail = true;
+					return;
+				}
+				localStorage.setItem('state', item.status.code);
+				localStorage.setItem('ids', item.farmingItem.id);
+				localStorage.setItem('onlyId', item.id);
+				if(item.status.code == "UNEXECUTED") {
+					mui.openWindow({
+						url: 'particulars.html',
+						id: 'particulars',
+						extras: {
+							ids: item.farmingItem.id,
+							onlyId: item.id,
+							state: item.status.code,
+							items: item
+						},
+						show: {
+							autoShow: true, //页面loaded事件发生后自动显示，默认为true
+							aniShow: "none", //页面显示动画，默认为”slide-in-right“；
+							duration: "100ms" //页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+						},
+						waiting: {
+							autoShow: false, //自动显示等待框，默认为true
+						}
+					})
+				} else {
+					mui.openWindow({
+						url: 'particularsAll.html',
+						id: 'particularsAll',
+						extras: {
+							ids: item.farmingItem.id,
+							onlyId: item.id,
+							state: item.status.code,
+							items: item
+						},
+						show: {
+							autoShow: true, //页面loaded事件发生后自动显示，默认为true
+							aniShow: "none", //页面显示动画，默认为”slide-in-right“；
+							duration: "100ms" //页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+						},
+						waiting: {
+							autoShow: false, //自动显示等待框，默认为true
+						}
+					})
+				}
+			}
+
+			/*mui('#scroll').on('tap', 'a', function() {
+				mui.openWindow({
+					url: 'new_file.html',
+					id: 'new_file'
+				})
+			})*/
+
+			mui('#segmentedControl').on('tap', 'a', function() {
+
+			})
+
+			window.addEventListener('refreshs', function(e) { //执行刷新
+				isCode = "2";
+				pulldownRefresh();
+			});
+
+			(function($, doc) {
+				$.init();
+				$.ready(function() {
+					/**
+					 * 获取对象属性的值
+					 * 主要用于过滤三级联动中，可能出现的最低级的数据不存在的情况，实际开发中需要注意这一点；
+					 * @param {Object} obj 对象
+					 * @param {String} param 属性名
+					 */
+					var _getParam = function(obj, param) {
+						return obj[param] || '';
+					};
+					//普通示例
+					/*var userPicker = new $.PopPicker();
+					var showUserPickerButton = doc.getElementById('showUserPicker');
+					var showUserPickerButtons = doc.getElementById('showUserPickers');
+					var userResult = doc.getElementById('userResult');
+					showUserPickerButton.addEventListener('tap', function(event) {
+						userPicker.setData(plants.option1);
+						plus.webview.currentWebview().setPullToRefresh({
+							support: false
+						});
+						userPicker.show(function(items) {
+							plus.webview.currentWebview().setPullToRefresh({
+								support: true,
+								style: "circle"
+							});
+							var jsons = JSON.parse(JSON.stringify(items[0]));
+							document.getElementById('baseName').innerText = jsons.text;
+							
+						});
+					}, false);*/
+
+					var cityPicker = new $.PopPicker({
+						layer: 2
+					});
+					var showCityPickerButton = doc.getElementById('showUserPicker');
+					showCityPickerButton.addEventListener('tap', function(event) {
+						plants.batchOrder = [];
+						plants.option1 = [{
+							text: '全部',
+							value: -1,
+							children: [{
+								text: '全部',
+								value: -1
+							}]
+						}];
+						ajaxs(getBaseTreeByUid, 'get').then(function(response) {
+							plants.batchOrder = response.result;
+							if(plants.batchOrder.length > 0) {
+								for(let index in plants.batchOrder) {
+									plants.option1.push({
+										text: plants.batchOrder[index].name,
+										value: plants.batchOrder[index].id,
+									});
+									var indexNum = parseInt(index) + 1;
+									if(plants.batchOrder[index].children != null && plants.batchOrder[index].children != []) {
+										plants.option1[indexNum].children = [];
+										if(plants.batchOrder[index].children.length == "0") {
+											plants.option1.splice(indexNum, 1);
+										}
+										for(let i = 0; i < plants.batchOrder[index].children.length; i++) {
+											plants.option1[indexNum].children.push({
+												text: plants.batchOrder[index].children[i].batchName,
+												value: plants.batchOrder[index].children[i].id,
+											});
+										}
+									}
+								}
+								cityPicker.setData(plants.option1);
+							} else {
+								plants.option1 = [{
+									text: '全部',
+									value: -1,
+									children: [{
+										text: '全部',
+										value: -1
+									}]
+								}];
+								cityPicker.setData(plants.option1);
+							}
+						}).catch(function(error) {
+
+						})
+						plus.webview.currentWebview().setPullToRefresh({
+							support: false
+						});
+						cityPicker.show(function(items) {
+							plus.webview.currentWebview().setPullToRefresh({
+								support: true,
+								style: "circle"
+							});
+							if(items[0].value == -1) {
+								document.getElementById('baseName').innerText = items[0].text;
+								document.getElementById('isNameShow').style.display = "block";
+								document.getElementById('isNameShows').style.display = "none";
+							} else {
+								document.getElementById('isNameShows').style.display = "block";
+								document.getElementById('isNameShow').style.display = "none";
+								document.getElementById('basename01').innerText = "基地:" + items[0].text;
+								document.getElementById('basename02').innerText = "批次:" + items[1].text;
+							}
+							var jsons = JSON.parse(JSON.stringify(items[1]));
+							var jsonsFir = JSON.parse(JSON.stringify(items[0]));
+							changes(jsonsFir.value, jsons.value);
+							//返回 false 可以阻止选择框的关闭
+							//return false;
+						});
+					}, false);
+				});
+			})(mui, document);
+
+			mui(document.body).on('tap', '.mui-backdrop', function(event) {
+				plus.webview.currentWebview().setPullToRefresh({
+					support: true,
+					style: "circle"
+				});
+			})
+
+			mui(document.body).on('tap', '.mui-poppicker-btn-cancel', function(event) {
+				plus.webview.currentWebview().setPullToRefresh({
+					support: true,
+					style: "circle"
+				});
+			})
+		</script>
+	</body>
+
+</html>

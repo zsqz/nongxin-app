@@ -1,0 +1,174 @@
+{
+	"repair_app_green/login.html": {
+		"refer": [
+			"repair_app_green/guide.html",
+			"repair_app_green/index.html",
+			"repair_app_green/testss.html",
+			"repair_app_green/versions.html"
+		],
+		"resources": [
+			"repair_app_green/logo/logo.jpg",
+			"repair_app_green/img/password.png",
+			"repair_app_green/img/phone.png",
+			"repair_app_green/css/app/login.css",
+			"repair_app_green/css/mui.min.css",
+			"repair_app_green/js/libs/md5.min.js",
+			"repair_app_green/js/index.js",
+			"repair_app_green/js/libs/mock-min.js",
+			"repair_app_green/js/libs/vue.min.js",
+			"repair_app_green/js/mui.min.js"
+		]
+	},
+	"repair_app_green/index.html": {
+		"refer": [
+			"repair_app_green/login.html",
+			"repair_app_green/pages/warning.html",
+			"repair_app_green/pages/plant.html",
+			"repair_app_green/pages/envControl.html",
+			"repair_app_green/pages/survey.html",
+			"repair_app_green/pages/personalCen.html",
+			"repair_app_green/pages/test.html",
+			"repair_app_green/webview_float.html"
+		],
+		"resources": [
+			"repair_app_green/pages/plant.html",
+			"repair_app_green/pages/envControl.html",
+			"repair_app_green/pages/survey.html",
+			"repair_app_green/pages/warning.html"
+		]
+	},
+	"repair_app_green/pages/plant.html": {
+		"refer": [
+			"repair_app_green/pages/new_file.html",
+			"repair_app_green/pages/particulars.html",
+			"repair_app_green/login.html",
+			"repair_app_green/pages/particularsAll.html",
+			"repair_app_green/pages/particularsadd.html"
+		],
+		"resources": [
+			"repair_app_green/fonts/mui.ttf",
+			"repair_app_green/img/plant006.png",
+			"repair_app_green/img/plant004.png",
+			"repair_app_green/css/mui.poppicker.css",
+			"repair_app_green/img/plant007.png",
+			"repair_app_green/img/upda.png",
+			"repair_app_green/css/mui.picker.css",
+			"repair_app_green/img/isacc.png",
+			"repair_app_green/img/plant005.png",
+			"repair_app_green/img/plant008.png",
+			"repair_app_green/js/libs/mui.picker.min.js",
+			"repair_app_green/css/mui.min.css"
+		]
+	},
+	"repair_app_green/pages/personalCen.html": {
+		"refer": [
+			"repair_app_green/login.html",
+			"repair_app_green/pages/changePass.html"
+		],
+		"resources": []
+	},
+	"repair_app_green/introduction.html": {
+		"refer": [
+			"repair_app_green/index.html"
+		],
+		"resources": []
+	},
+	"repair_app_green/pages/particulars.html": {
+		"refer": [
+			"repair_app_green/pages/tasks.html",
+			"repair_app_green/pages/test.html",
+			"repair_app_green/pages/taskss.html"
+		],
+		"resources": []
+	},
+	"repair_app_green/pages/test.html": {
+		"refer": [
+			"repair_app_green/pages/cost.html"
+		],
+		"resources": []
+	},
+	"repair_app_green/pages/tasks.html": {
+		"refer": [
+			"repair_app_green/pages/cost.html",
+			"repair_app_green/pages/particulars.html"
+		],
+		"resources": []
+	},
+	"repair_app_green/pages/cost.html": {
+		"refer": [
+			"repair_app_green/index.html",
+			"repair_app_green/pages/plant.html"
+		],
+		"resources": []
+	},
+	"repair_app_green/pages/survey.html": {
+		"refer": [
+			"repair_app_green/index.html",
+			"repair_app_green/login.html",
+			"repair_app_green/pages/pestDiag.html",
+			"repair_app_green/pages/addpestDiag.html",
+			"repair_app_green/pages/addpestDiags.html",
+			"repair_app_green/pages/pestDiags.html"
+		],
+		"resources": [
+			"repair_app_green/js/libs/mui.previewimage.js",
+			"repair_app_green/css/mui.poppicker.css",
+			"repair_app_green/js/libs/mui.zoom.js",
+			"repair_app_green/img/survey03.png",
+			"repair_app_green/css/mui.picker.css",
+			"repair_app_green/img/surveryaddImg.png",
+			"repair_app_green/img/survey02.png",
+			"repair_app_green/img/survey01.png",
+			"repair_app_green/js/libs/mui.picker.min.js",
+			"repair_app_green/css/mui.min.css"
+		]
+	},
+	"repair_app_green/pages/taskss.html": {
+		"refer": [
+			"repair_app_green/pages/cost.html"
+		],
+		"resources": []
+	},
+	"repair_app_green/pages/warning.html": {
+		"resources": [
+			"repair_app_green/js/libs/echarts-all.js",
+			"repair_app_green/fonts/mui.ttf",
+			"repair_app_green/img/warning01.jpg",
+			"repair_app_green/css/mui.poppicker.css",
+			"repair_app_green/css/mui.picker.css",
+			"repair_app_green/js/libs/mui.picker.min.js",
+			"repair_app_green/img/warning02.png",
+			"repair_app_green/css/mui.min.css"
+		],
+		"refer": [
+			"repair_app_green/login.html",
+			"repair_app_green/pages/warnShow.html"
+		]
+	},
+	"repair_app_green/pages/envControl.html": {
+		"resources": [
+			"repair_app_green/js/libs/echarts-all.js",
+			"repair_app_green/img/envControl06.png",
+			"repair_app_green/css/mui.poppicker.css",
+			"repair_app_green/img/envControl04.png",
+			"repair_app_green/img/envControl07.png",
+			"repair_app_green/css/mui.picker.css",
+			"repair_app_green/img/envControl08.png",
+			"repair_app_green/img/envControl05.png",
+			"repair_app_green/img/envControl02.png",
+			"repair_app_green/img/envControl01.png",
+			"repair_app_green/img/envControl03.png",
+			"repair_app_green/js/libs/mui.picker.min.js",
+			"repair_app_green/css/mui.min.css"
+		],
+		"refer": [
+			"repair_app_green/login.html"
+		]
+	},
+	"repair_app_green/pages/particularsAll.html": {
+		"refer": [
+			"repair_app_green/pages/tasks.html"
+		],
+		"resources": []
+	}
+}

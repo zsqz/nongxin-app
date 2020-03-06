@@ -1,0 +1,648 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="HandheldFriendly" content="true" />
+		<meta name="MobileOptimized" content="320" />
+		<!--<link rel="stylesheet" href="../css/index.css" />-->
+		<script type="text/javascript" src="../js/mui.js"></script>
+		<script type="text/javascript" src="../js/common.js"></script>
+		<script type="text/javascript" src="../js/libs/vue.min.js"></script>
+		<script type="text/javascript" src="../js/index.js"></script>
+		<link rel="stylesheet" href="../css/mui.min.css" />
+		<link rel="stylesheet" href="../css/audio.css" />
+		<style type="text/css">
+			.mui-preview-image.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			
+			.mui-preview-header,
+			.mui-preview-footer {
+				position: absolute;
+				width: 100%;
+				left: 0;
+				z-index: 10;
+			}
+			
+			.mui-preview-header {
+				height: 44px;
+				top: 0;
+			}
+			
+			.mui-preview-footer {
+				height: 50px;
+				bottom: 0px;
+			}
+			
+			.mui-preview-header .mui-preview-indicator {
+				display: block;
+				line-height: 25px;
+				color: #fff;
+				text-align: center;
+				margin: 15px auto 4;
+				width: 70px;
+				background-color: rgba(0, 0, 0, 0.4);
+				border-radius: 12px;
+				font-size: 16px;
+			}
+			
+			.mui-preview-image {
+				display: none;
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+			}
+			
+			.mui-preview-image.mui-preview-in {
+				-webkit-animation-name: fadeIn;
+				animation-name: fadeIn;
+			}
+			
+			.mui-preview-image.mui-preview-out {
+				background: none;
+				-webkit-animation-name: fadeOut;
+				animation-name: fadeOut;
+			}
+			
+			.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+				display: none;
+			}
+			
+			.mui-zoom-scroller {
+				position: absolute;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				-webkit-backface-visibility: hidden;
+			}
+			
+			.mui-zoom {
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+			
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
+			
+			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+				width: 100%;
+			}
+			
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+				display: inline-table;
+			}
+			
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			
+			.mui-preview-loading {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+			
+			.mui-preview-loading.mui-active {
+				display: block;
+			}
+			
+			.mui-preview-loading .mui-spinner-white {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -25px;
+				margin-top: -25px;
+				height: 50px;
+				width: 50px;
+			}
+			
+			.mui-preview-image img.mui-transitioning {
+				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+				transition: transform 0.5s ease, opacity 0.5s ease;
+			}
+			
+			@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			
+			p img {
+				max-width: 100%;
+				height: auto;
+			}
+			
+			.mui-bar {
+				height: 43px;
+				background-color: #12B482;
+			}
+			
+			.mui-title {
+				line-height: 44px;
+				color: white;
+				font-size: 17px;
+				letter-spacing: 5px;
+			}
+			
+			body {
+				background-color: #efeff4;
+			}
+			
+			a {
+				color: white;
+			}
+			
+			.mui-bar .mui-icon {
+				padding-top: 9px;
+			}
+			
+			.box {
+				padding: 20px;
+			}
+			
+			.box-span {
+				display: block;
+				font-size: 14px;
+			}
+			
+			.mui-button-row .btn {
+				height: 36px;
+				padding: 0;
+				width: 95%;
+				border-radius: 3px;
+				color: #fff;
+				margin-bottom: 5px;
+				background-color: #12b482;
+				border: 1px solid #12b482;
+				font-size: 18px;
+			}
+			
+			#recorder {
+				font-weight: normal;
+				text-decoration: none;
+				display: block;
+				text-align: center;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				color: rgba(102, 102, 102, 1);
+				background: rgba(226, 226, 226, 1);
+				padding: .3em 0em;
+				width: 188px;
+				height: 30px;
+				font-size: 12px;
+				border-radius: 5px;
+				margin: 0px;
+				position: absolute;
+				line-height: 25px;
+				top: 250px;
+				left: 25%;
+			}
+			
+			.imgAll {
+				width: 50%;
+				height: 100%;
+				background-image: url(../img/uploadpho.png);
+				background-repeat: no-repeat;
+				background-size: 100% 100%;
+			}
+			
+			#audioAll {
+				width: 100%;
+				background-color: #12b482;
+				color: white;
+				text-align: center;
+				height: 25px;
+				line-height: 25px;
+				font-size: 14px;
+				letter-spacing: 5px;
+				margin-top: 10px;
+			}
+			
+			.noscroll {
+				position: fixed;
+				top: 0;
+				height: 100%;
+				overflow: hidden;
+			}
+			
+			i {
+				display: block;
+				background: #f00;
+				border-radius: 50%;
+				width: 5px;
+				height: 5px;
+				top: 30%;
+				left: 5px;
+				position: absolute;
+			}
+			
+			textarea {
+				margin-bottom: 0px;
+			}
+			
+			.title {
+				width: 100%;
+				text-align: center;
+			}
+			
+			.btn {
+				width: 100%;
+				background-color: #12B482;
+				height: 43px;
+				color: white;
+				position: fixed;
+				bottom: 0px;
+			}
+			
+			textarea {
+				color: rgba(153, 153, 153, 1);
+				font-size: 12px;
+				padding: 10px 0px;
+				border: 1px solid rgba(0, 0, 0, 0);
+			}
+		</style>
+	</head>
+
+	<body>
+		<div style="margin-top: 50px;background: white;" id="particularsadd">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<h1 class="mui-title" id="taskstitle" v-if="datas.farmingItem">{{datas.farmingItem.farmingName}}</h1>
+			</header>
+			<div class="box">
+				<span class="box-span">申请执行报告</span>
+				<textarea rows="3" cols="30" placeholder="请在此处输入相关报告" v-model="textareaAll" style="margin-bottom: 10px;"></textarea>
+				<div id='sound-alert' class="rprogress" style="z-index: 10;">
+					<div class="rschedule"></div>
+					<div class="r-sigh">!</div>
+					<div id="audio-tips" class="rsalert">手指上滑，取消发送</div>
+				</div>
+				<div style="margin-top: 25px;">
+					<div style="width: 100%;height: 30px;border-bottom: 1px solid #D3D3D3;position: relative;padding-left: 20px;display: none;" id="isAudioShow">
+						<i></i><span>录音时长</span><img src="../img/audios.png" style="margin-left: 15px;width: 9px;"><span style="color: #FFA200;font-size: 15px;" id="totalTime"></span><img src="../img/audioplay.png" style="position: absolute;left: 55%;top: 0%;" id="audioPlay"><img src="../img/audioclose.png" style="position: absolute;left: 55%;display: none;top: 0%;" id="audioclose"><span class="mui-icon mui-icon-closeempty" style="font-weight: bold;font-size: 29px;float: right;line-height: 21px;color: #FFA200;" id="removeAudio"></span>
+					</div>
+					<div class="button" id="recorder">按住录音</div>
+				</div>
+			</div>
+			<button type="button" class="btn" id="commitSur">申请执行</button>
+		</div>
+		<script type="text/javascript" src="../js/libs/mui.zoom.js"></script>
+		<script type="text/javascript" src="../js/libs/mui.previewimage.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				gestureConfig: {
+					tap: true, //默认为true
+					drag: true, //默认为true
+					hold: true, //默认为false，不监听
+					release: true //默认为false，不监听
+				}
+			});
+
+			mui.back = function() {
+				if(audioId != '' && isUpdats != true || isUpdats == true && audioNumber == 1) {
+					ajaxs(fileDelete + "?id=" + audioId, 'get').then(function(response) {
+						if(response.success) {}
+					}).catch(function(error) {
+
+					})
+				}
+				var ws = plus.webview.currentWebview();
+				plus.webview.close(ws);
+				return true;
+			}
+
+			var onlyIds = "";
+			var entrys = null;
+			var MIN_SOUND_TIME = 800;
+			var recorder = null;
+			var startTimestamp = null;
+			var stopTimestamp = null;
+			var stopTimer = null;
+			var recordCancel = false;
+
+			var audiopath = "";
+			var audioId = "";
+
+			var isUpdats = '';
+
+			var imgNumber = 0;
+			var audioNumber = 0;
+
+			var orderId = 0;
+
+			var soundAlert = document.getElementById("sound-alert");
+			var audioTips = document.getElementById("audio-tips");
+
+			var particularsadd = new Vue({
+				el: '#particularsadd',
+				data: {
+					datas: {},
+					textareaAll: '',
+				}
+			});
+			
+			var subimts = true;
+
+			var setSoundAlertVisable = function(show) {
+				if(show) {
+					document.getElementById("sound-alert").style.display = 'block'
+					document.getElementById("sound-alert").style.opacity = 1;
+					/*document.getElementsByTagName("body")[0].classList.add("noscroll");*/
+				} else {
+					/*document.getElementsByTagName("body")[0].classList.remove("noscroll");*/
+					document.getElementById("sound-alert").style.opacity = 0;
+					//  完成再真正隐藏
+					setTimeout(function() {
+						document.getElementById("sound-alert").style.display = 'none';
+					}, 100);
+				}
+			};
+
+			function uploadVoice(path) {
+				var task = plus.uploader.createUpload(api + uploadOrderApplyFile, {
+						method: "POST"
+					},
+					function(t, status) {
+						// 上传完成
+						var objects = JSON.parse(t.responseText);
+						if(objects.success) {
+							audioNumber = 1;
+							audioId = objects.result.id;
+							var times = objects.result.remark;
+							document.getElementById("totalTime").innerHTML = times + "S";
+							document.getElementById("isAudioShow").style.display = 'block'
+							document.getElementById("recorder").style.display = 'none'
+						}
+					}
+				);
+				task.addFile(path, {
+					key: "file"
+				});
+				task.start();
+			}
+
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				particularsadd.datas = self.data;
+				orderId = particularsadd.datas.id
+				var isAudio = "";
+				// 按住录音（长按开始录音）
+				document.querySelector('#recorder').addEventListener('hold', function() {
+					document.addEventListener('touchmove', preventDefault, {
+						passive: false
+					});
+					isAudio = document.getElementById("isAudioShow").style.display;
+					if(isAudio == 'block') {
+						mui.toast("已有录音文件,请先删除原有录音");
+						return;
+					}
+					recordCancel = false;
+					if(stopTimer) clearTimeout(stopTimer);
+					document.getElementById("sound-alert").style.display = 'block'
+					document.getElementById("audio-tips").innerHTML = "手指上划，取消发送";
+					document.getElementById("sound-alert").classList.remove('rprogress-sigh');
+					setSoundAlertVisable(true);
+
+					// 获取当前设备的录音对象
+					recorder = plus.audio.getRecorder();
+					startTimestamp = (new Date()).getTime();
+					recorder.record({
+						filename: '_doc/audio/'
+					}, function(path) {
+						if(recordCancel) return;
+						console.log("path:" + path);
+						audiopath = path;
+						mui.toast('录音完成');
+						plus.io.resolveLocalFileSystemURL(path, function(entry) {
+							/*uploadVoice(entry);*/
+							for(var prop in entry) {
+								if("fullPath" == prop) {
+									uploadVoice(entry[prop]);
+								}
+							}
+						}, function(e) {
+							mui.toast('读取录音文件错误：' + e.message);
+						});
+					}, function(e) {
+						mui.toast("录音出现异常: " + e.message);
+					});
+				})
+
+				// 释放保存（松手保存）
+				document.querySelector('#recorder').addEventListener('release', function() {
+					document.removeEventListener('touchmove', preventDefault, {
+						passive: false
+					});
+					if(document.getElementById("audio-tips").classList.contains("cancel")) {
+						document.getElementById("audio-tips").classList.remove("cancel");
+						document.getElementById("audio-tips").innerHTML = "手指上划，取消发送";
+					}
+					// 判断录音时间
+					stopTimestamp = (new Date()).getTime();
+					if(stopTimestamp - startTimestamp < 800) {
+						document.getElementById("audio-tips").innerHTML = "录音时间太短";
+						document.getElementById("sound-alert").classList.add('rprogress-sigh');
+						recordCancel = true;
+						stopTimer = setTimeout(function() {
+							setSoundAlertVisable(false);
+						}, 800);
+					} else {
+						setSoundAlertVisable(false);
+					}
+					if(isAudio != 'block') {
+						recorder.stop();
+					}
+				})
+
+				// 拖动屏幕（手指上划，取消发送）
+				document.body.addEventListener('drag', function(event) {
+					if(Math.abs(event.detail.deltaY) > 50) {
+						if(!recordCancel) {
+							recordCancel = true;
+							if(!document.getElementById("audio-tips").classList.contains("cancel")) {
+								document.getElementById("audio-tips").classList.add("cancel");
+							}
+							document.getElementById("audio-tips").innerHTML = "松开手指，取消发送";
+						}
+					} else {
+						if(recordCancel) {
+							recordCancel = false;
+							if(document.getElementById("audio-tips").classList.contains("cancel")) {
+								document.getElementById("audio-tips").classList.remove("cancel");
+							}
+							document.getElementById("audio-tips").innerHTML = "手指上划，取消发送";
+						}
+					}
+				}, false);
+
+				document.getElementById('audioPlay').addEventListener('tap', function() {
+					startPlay(audiopath);
+				})
+
+				document.getElementById('audioclose').addEventListener('tap', function() {
+					var player = plus.audio.createPlayer(audiopath);
+					stopPlay(player);
+					mui.toast('停止播放')
+				})
+
+				document.getElementById('removeAudio').addEventListener('tap', function() {
+					plus.nativeUI.confirm('确定删除录音？', function(e) {
+						if(e.index == "0") {
+							console.log(isUpdats);
+							if(isUpdats) {
+								audioNumber = 0;
+								removeAudioId = audioId;
+								document.getElementById('isAudioShow').style.display = 'none';
+								document.getElementById("recorder").style.display = 'block'
+							} else {
+								ajaxs(fileDelete + "?id=" + audioId, 'get').then(function(response) {
+									if(response.success) {
+										mui.toast(response.message);
+										document.getElementById('isAudioShow').style.display = 'none';
+										document.getElementById("recorder").style.display = 'block'
+									}
+								}).catch(function(error) {
+
+								})
+							}
+						}
+					}, {
+						title: '提示', //确认对话框显示的标题
+						buttons: [ //确认对话框上显示的按钮
+							"确定", "取消"
+						],
+						verticalAlign: 'center', //对话框在屏幕中的垂直分享对齐方式,top|center|bottom
+					});
+				})
+
+				document.getElementById('commitSur').addEventListener('tap', function() {
+					if(!subimts){
+						return
+					}
+					if(particularsadd.textareaAll == '') {
+						plus.nativeUI.alert('请填写申请报告！', function(e) {}, '提示', '确定');
+						return;
+					}
+					var data = {};
+					if(audioId == '') {
+						data = {
+							orderId: orderId,
+							applyContent: particularsadd.textareaAll
+						}
+					} else {
+						data = {
+							orderId: orderId,
+							applyContent: particularsadd.textareaAll,
+							fileInfo: {
+								id: audioId
+							}
+						}
+					}
+					subimts=false;
+					ajaxs(addOrderApply, 'post', data).then(function(response) {
+						if(response.success) {
+								var cPage = plus.webview.currentWebview().opener();
+								//refresh是A页面自定义事件
+								mui.fire(cPage, 'refreshs');
+								mui.toast('工单申请成功!');
+								setTimeout(function() {
+									plus.webview.currentWebview().hide();
+									plus.webview.currentWebview().close();
+								}, 1000);
+						}
+					}).catch(function(error) {
+
+					})
+				})
+			})
+
+			var player = "";
+
+			function startPlay(path) {
+				mui.toast("开始播放");
+				document.getElementById('audioPlay').style.display = 'none';
+				document.getElementById('audioclose').style.display = 'block';
+				player = plus.audio.createPlayer(path);
+				player.play(function() {
+					mui.toast("播放完成");
+					stopPlay(player);
+				}, function(e) {
+					mui.toast("播放失败");
+				});
+			}
+
+			function preventDefault(e) {
+				e.preventDefault();
+			}
+
+			// 停止播放
+			function stopPlay() {
+				document.getElementById('audioPlay').style.display = 'block';
+				document.getElementById('audioclose').style.display = 'none';
+				player.stop();
+				player = "";
+			}
+		</script>
+	</body>
+	<script type="text/javascript" src="../js/immersed.js"></script>
+
+</html>

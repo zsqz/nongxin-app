@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style>
+			.mui-bar {
+				background-color: #13B482;
+			}
+			
+			.mui-bar-nav {
+				top: 0;
+				-webkit-box-shadow: 0 0px 0px #ccc;
+			}
+			
+			.mui-title {
+				line-height: 99px;
+				color: white;
+				font-weight: bolder;
+				font-size: 19px;
+			}
+			
+			.mui-bar {
+				height: 80px;
+			}
+			
+			.mui-bar .mui-icon {
+				padding-top: 37px;
+				color: white;
+			}
+			
+			.warn-boxs {
+				width: 100%;
+				height: 45px;
+				display: flex;
+				font-size: 12px;
+				line-height: 45px;
+				border-bottom: 1px solid #F2F2F2;
+			}
+			
+			.colorBlue {
+				color: #2B95FF;
+			}
+			
+			.colorRed {
+				color: red;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title" id="headerName"></h1>
+		</header>
+		<div class="mui-content" id="warnShow">
+			<div style="width: 100%;height: 100px;background-color: #13B482;"></div>
+			<div style="width: 100%;padding: 0px 10px;margin-top: -48px;">
+				<div style="width: 100%;background-color: white;border-radius: 10px;text-align: center;color: #666666;padding: 0px 0px 15px 0px;margin-bottom: 20px;">
+					<img src="../img/warnShow01.png" style="width: 20px;margin-right: 25px;vertical-align: sub;"><span style="line-height: 70px;" id="warn-time"></span>
+					<div style="width: 100%;padding: 0px 15px;">
+						<div class="warn-boxs" v-for="item in warnDatas">
+							<div style="flex: 1;text-align: left;" :class="getColor(item.content)?'colorBlue':'colorRed'">
+								<span>{{getString(item.content)}}&nbsp;&nbsp;{{item.value}}{{item.unit}}{{getStr(item.content)}}</span>
+							</div>
+							<div style="flex: 1.2;text-align: left;">
+								<span>对照范围:&nbsp;&nbsp;{{item.contrastVo.lowValue}}{{item.unit}}-{{item.contrastVo.highValue}}{{item.unit}}</span>
+							</div>
+						</div>
+						<div class="warn-boxs" v-for="item in valueDatas">
+							<div style="flex: 1;text-align: left;">
+								<span>{{getTitle(item.text)}}&nbsp;&nbsp;{{item.value}}{{getUnit(item.text)}}</span>
+							</div>
+							<div style="flex: 1.2;text-align: left;">
+								<span>对照范围:&nbsp;&nbsp;{{item.warnEnv.lowValue}}{{getUnit(item.text)}}-{{item.warnEnv.highValue}}{{getUnit(item.text)}}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/libs/vue.min.js"></script>
+		<script type="text/javascript" src="../js/index.js"></script>
+		<script type="text/javascript">
+			var warnShow = new Vue({
+				el: '#warnShow',
+				data: {
+					warnDatas: [],
+					valueDatas: [],
+				}
+			});
+
+			mui.init();
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				var baseId = self.baseId;
+				var time = self.times;
+				var baseName = self.baseName;
+				document.getElementById('headerName').innerText = baseName;
+				document.getElementById('warn-time').innerText = time;
+				ajaxs(getNormalEnv + "?baseId=" + baseId + "&time=" + time, 'get').then(function(response) {
+					if(response.success) {
+						warnShow.warnDatas = response.result.warnRecordList;
+						/*warnShow.allDatas.push(response.result.airTemperature);*/
+						var results = response.result;
+						for(let index in results) {
+							if(index != 'monitorTime' && index != 'equipmentId' && index != 'factoryId' && index != 'warnEnv' && index != 'warnRecordList' && index != 'windDirection') {
+								if(index == 'airTemperature') {
+									warnShow.valueDatas.push({
+										text: index,
+										value: results[index],
+										warnEnv: {
+											lowValue: response.result.warnEnv.minairtemperature,
+											highValue: response.result.warnEnv.maxairtemperature
+										}
+									});
+								} else if(index == 'airHumidity') {
+									warnShow.valueDatas.push({
+										text: index,
+										value: results[index],
+										warnEnv: {
+											lowValue: response.result.warnEnv.minairhumidity,
+											highValue: response.result.warnEnv.maxairhumidity
+										}
+									});
+								} else if(index == 'soilTemperature') {
+									warnShow.valueDatas.push({
+										text: index,
+										value: results[index],
+										warnEnv: {
+											lowValue: response.result.warnEnv.minsoiltemperature,
+											highValue: response.result.warnEnv.maxsoiltemperature
+										}
+									});
+								} else if(index == 'soilHumidity') {
+									warnShow.valueDatas.push({
+										text: index,
+										value: results[index],
+										warnEnv: {
+											lowValue: response.result.warnEnv.minsoilhumidity,
+											highValue: response.result.warnEnv.maxsoilhumidity
+										}
+									});
+								} else if(index == 'soilPh') {
+									warnShow.valueDatas.push({
+										text: index,
+										value: results[index],
+										warnEnv: {
+											lowValue: response.result.warnEnv.minsoilph,
+											highValue: response.result.warnEnv.maxsoilph
+										}
+									});
+								} else if(index == 'illIntensity') {
+									warnShow.valueDatas.push({
+										text: index,
+										value: results[index],
+										warnEnv: {
+											lowValue: response.result.warnEnv.minillIntensity,
+											highValue: response.result.warnEnv.maxillIntensity
+										}
+									});
+								} else if(index == 'rainfall') {
+									warnShow.valueDatas.push({
+										text: index,
+										value: results[index],
+										warnEnv: {
+											lowValue: response.result.warnEnv.minrainfall,
+											highValue: response.result.warnEnv.maxrainfall
+										}
+									});
+								} else if(index == 'co2Value') {
+									warnShow.valueDatas.push({
+										text: index,
+										value: results[index],
+										warnEnv: {
+											lowValue: response.result.warnEnv.minco2,
+											highValue: response.result.warnEnv.maxco2
+										}
+									});
+								} else if(index == 'pm25Value') {
+									warnShow.valueDatas.push({
+										text: index,
+										value: results[index],
+										warnEnv: {
+											lowValue: response.result.warnEnv.minpm25,
+											highValue: response.result.warnEnv.maxpm25
+										}
+									});
+								} else if(index == 'pm10Value') {
+									warnShow.valueDatas.push({
+										text: index,
+										value: results[index],
+										warnEnv: {
+											lowValue: response.result.warnEnv.minpm10,
+											highValue: response.result.warnEnv.maxpm10
+										}
+									});
+								} else if(index == 'windSpeed') {
+									warnShow.valueDatas.push({
+										text: index,
+										value: results[index],
+										warnEnv: {
+											lowValue: response.result.warnEnv.minwindspeed,
+											highValue: response.result.warnEnv.maxwindspeed
+										}
+									});
+								} else if(index == 'soilEc') {
+									warnShow.valueDatas.push({
+										text: index,
+										value: results[index],
+										warnEnv: {
+											lowValue: response.result.warnEnv.minsoilec,
+											highValue: response.result.warnEnv.maxsoilec
+										}
+									});
+								} else if(index == 'soilS') {
+									warnShow.valueDatas.push({
+										text: index,
+										value: results[index],
+										warnEnv: {
+											lowValue: response.result.warnEnv.minsoils,
+											highValue: response.result.warnEnv.maxsoils
+										}
+									});
+								}
+							}
+						}
+
+						var repeAll = [];
+
+						for(var i = 0; i < warnShow.warnDatas.length; i++) {
+							for(var j = 0; j < warnShow.valueDatas.length; j++) {
+								if(warnShow.warnDatas[i].type == warnShow.valueDatas[j].text) {
+									repeAll.push(j);
+								}
+							}
+						}
+
+						var dataSave = [];
+
+						for(var index = 0; index < repeAll.length; index++) {
+							dataSave.push(warnShow.valueDatas[repeAll[index]]);
+						}
+
+						warnShow.valueDatas=array_diff(warnShow.valueDatas,dataSave);
+
+					}
+				}).catch(function(error) {
+
+				})
+			})
+
+			function array_diff(a, b) {
+				for(var i = 0; i < b.length; i++) {
+					for(var j = 0; j < a.length; j++) {
+						if(a[j].text == b[i].text) {
+							a.splice(j, 1);
+							j = j - 1;
+						}
+					}
+				}
+				return a;
+			}
+
+			function getString(str) {
+				var strs = str.slice(0, -2) + ':';
+				return strs;
+			}
+
+			function getStrings(str) {
+				var strs = '(' + str.slice(-2) + ')';
+				return strs;
+			}
+
+			function getColor(str) {
+				var strs = str.slice(-2);
+				if(strs == "偏低") {
+					return true;
+				} else {
+					return false
+				}
+			}
+			
+			function getStr(str){
+				var strs = str.slice(-2);
+				if(strs == "偏低") {
+					return '↓';
+				} else {
+					return '↑'
+				}
+			}
+
+			function getUnit(title) {
+				var units = '';
+				switch(title) {
+					case 'airTemperature':
+						units = '°C'
+						break;
+					case 'soilTemperature':
+						units = '°C'
+						break;
+					case 'airHumidity':
+						units = '%'
+						break;
+					case 'airPressure':
+						units = 'kpa'
+						break;
+					case 'windSpeed':
+						units = 'm/s'
+						break;
+					case 'co2Value':
+						units = 'ppm'
+						break;
+					case 'pm25Value':
+						units = 'ug/ms'
+						break;
+					case 'pm10Value':
+						units = 'ug/ms'
+						break;
+					case 'soilEc':
+						units = 'uS/cm'
+						break;
+					case 'soilS':
+						units = 'ppm'
+						break;
+					case 'soilHumidity':
+						units = '%'
+						break;
+					case 'soilPh':
+						units = ' '
+						break;
+					case 'rainfall':
+						units = 'mm'
+						break;
+					case 'illIntensity':
+						units = 'Lux'
+						break;
+				}
+				return units;
+			}
+
+			function getTitle(title) {
+				var titles = '';
+				switch(title) {
+					case 'airTemperature':
+						titles = '空气温度:'
+						break;
+					case 'airHumidity':
+						titles = '空气湿度:'
+						break;
+					case 'airPressure':
+						titles = '大气压力:'
+						break;
+					case 'windSpeed':
+						titles = '风速:'
+						break;
+					case 'co2Value':
+						titles = '二氧化碳浓度:'
+						break;
+					case 'pm25Value':
+						titles = 'PM2.5浓度:'
+						break;
+					case 'pm10Value':
+						titles = 'PM10浓度:'
+						break;
+					case 'soilTemperature':
+						titles = '土壤温度:'
+						break;
+					case 'soilHumidity':
+						titles = '土壤湿度:'
+						break;
+					case 'soilPh':
+						titles = '土壤PH值:'
+						break;
+					case 'soilEc':
+						titles = '土壤EC值:'
+						break;
+					case 'soilS':
+						titles = '土壤盐分:'
+						break;
+					case 'rainfall':
+						titles = '雨量:'
+						break;
+					case 'illIntensity':
+						titles = '光照强度:'
+						break;
+				}
+				return titles;
+			}
+		</script>
+
+	</body>
+
+</html>

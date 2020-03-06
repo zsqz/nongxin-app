@@ -1,0 +1,1189 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<script src="../js/mui.min.js"></script>
+		<style>
+			<!--App自定义的css-->.mui-preview-header,
+			.mui-preview-footer {
+				position: absolute;
+				width: 100%;
+				left: 0;
+				z-index: 10;
+			}
+			
+			.mui-preview-header {
+				height: 44px;
+				top: 0;
+			}
+			
+			.mui-preview-footer {
+				height: 50px;
+				bottom: 0px;
+			}
+			
+			.mui-preview-header .mui-preview-indicator {
+				display: block;
+				line-height: 25px;
+				color: #fff;
+				text-align: center;
+				margin: 15px auto 4;
+				width: 70px;
+				background-color: rgba(0, 0, 0, 0.4);
+				border-radius: 12px;
+				font-size: 16px;
+			}
+			
+			.mui-preview-image {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+				display: none;
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+			}
+			
+			.mui-preview-image.mui-preview-in {
+				-webkit-animation-name: fadeIn;
+				animation-name: fadeIn;
+			}
+			
+			.mui-preview-image.mui-preview-out {
+				background: none;
+				-webkit-animation-name: fadeOut;
+				animation-name: fadeOut;
+			}
+			
+			.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+				display: none;
+			}
+			
+			.mui-zoom-scroller {
+				position: absolute;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				-webkit-backface-visibility: hidden;
+			}
+			
+			.mui-zoom {
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+			
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
+			
+			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+				width: 100%;
+			}
+			
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+				display: inline-table;
+			}
+			
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			
+			.mui-preview-loading {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+			
+			.mui-preview-loading.mui-active {
+				display: block;
+			}
+			
+			.mui-preview-loading .mui-spinner-white {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -25px;
+				margin-top: -25px;
+				height: 50px;
+				width: 50px;
+			}
+			
+			.mui-preview-image img.mui-transitioning {
+				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+				transition: transform 0.5s ease, opacity 0.5s ease;
+			}
+			
+			.mui-preview-image .mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			
+			.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			
+			@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			
+			p img {
+				max-width: 100%;
+				height: auto;
+			}
+			
+			.box {
+				background-color: white;
+				margin: 0% 2%;
+				border: 1px solid rgb(192, 192, 192);
+				padding: 20px 15px 0px 15px;
+				margin-top: 10px;
+			}
+			
+			.box-span {
+				color: #696969;
+			}
+			
+			.btn {
+				margin: 8% 2% 8% 2%;
+				width: 96%;
+				background-color: #12B482;
+				height: 43px;
+				color: white;
+			}
+			
+			#survey /deep/ .van-dropdown-menu {
+				background-color: #EFEFF4 !important;
+				height: 60px !important;
+			}
+			
+			#survey /deep/ .van-dropdown-menu__item {
+				-webkit-box-pack: left;
+				-webkit-justify-content: left;
+				padding-left: 7px;
+			}
+			
+			#survey /deep/ .van-popup {
+				max-height: 45% !important;
+			}
+			
+			#survey /deep/ .van-dropdown-menu__title {
+				font-size: 17px;
+			}
+			
+			#survey /deep/ .van-cell__title {
+				font-size: 15px;
+			}
+			
+			#survey /deep/ .van-cell {
+				background-color: #EFEFF4 !important;
+			}
+			
+			textarea {
+				padding: 0px;
+				font-size: 13px;
+				color: #808080;
+				margin-bottom: 0px;
+				height: 100px;
+			}
+			
+			.van-toast {
+				width: 120px;
+			}
+			
+			.imgAll {
+				width: 50%;
+				height: 100%;
+				background-image: url(../img/uploadpho.png);
+				background-repeat: no-repeat;
+				background-size: 100% 100%;
+			}
+			
+			.tripList_root {
+				top: 0px;
+				left: 0px;
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				position: fixed;
+				z-index: 0;
+			}
+			
+			.nscroll {
+				position: fixed;
+				top: 0;
+				height: 100%;
+				overflow: hidden;
+			}
+			
+			.mui-show-loading {
+				position: fixed;
+				padding: 5px;
+				width: 120px;
+				min-height: 120px;
+				top: 45%;
+				left: 50%;
+				margin-left: -60px;
+				background: rgba(0, 0, 0, 0.6);
+				text-align: center;
+				border-radius: 5px;
+				color: #FFFFFF;
+				visibility: hidden;
+				margin: 0;
+				z-index: 2000;
+				-webkit-transition-duration: .2s;
+				transition-duration: .2s;
+				opacity: 0;
+				-webkit-transform: scale(0.9) translate(-50%, -50%);
+				transform: scale(0.9) translate(-50%, -50%);
+				-webkit-transform-origin: 0 0;
+				transform-origin: 0 0;
+			}
+			
+			.mui-show-loading.loading-visible {
+				opacity: 1;
+				visibility: visible;
+				-webkit-transform: scale(1) translate(-50%, -50%);
+				transform: scale(1) translate(-50%, -50%);
+			}
+			
+			.mui-show-loading .mui-spinner {
+				margin-top: 24px;
+				width: 36px;
+				height: 36px;
+			}
+			
+			.mui-show-loading .text {
+				line-height: 1.6;
+				font-family: -apple-system-font, "Helvetica Neue", sans-serif;
+				font-size: 14px;
+				margin: 10px 0 0;
+				color: #fff;
+			}
+			
+			.mui-show-loading-mask {
+				position: fixed;
+				z-index: 1000;
+				top: 0;
+				right: 0;
+				left: 0;
+				bottom: 0;
+			}
+			
+			.mui-show-loading-mask-hidden {
+				display: none !important;
+			}
+			
+			#triangle-down {
+				width: 0;
+				height: 0;
+				border-left: 5px solid transparent;
+				border-right: 5px solid transparent;
+				border-top: 5px solid black;
+				position: absolute;
+				top: 17px;
+				left: 70%;
+			}
+			
+			.mui-btn-blue {
+				border: 1px solid #12B482;
+				background-color: #12B482;
+			}
+			
+			.van-tabs__line {
+				background-color: #12B482 !important;
+			}
+			
+			.van-tab--active {
+				color: #12B482 !important;
+			}
+			
+			#survey /deep/ .van-tab {
+				color: black;
+			}
+			
+			#bingchong {
+				width: 100%;
+				padding: 0px 20px;
+				margin: 10px 0px 20px 0px;
+			}
+			
+			#bingchong-box {
+				width: 100%;
+				height: 80px;
+				background: white;
+				display: flex;
+				flex-direction: column;
+				position: relative;
+				margin-bottom: 20px;
+				border-radius: 5px;
+			}
+			
+			#bingchong-box img {
+				position: absolute;
+				top: 47%;
+				left: 25px;
+				transform: translate(-50%, -50%);
+				width: 20px;
+			}
+			
+			#bingchong-box span {
+				line-height: 40px;
+				font-size: 15px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				display: block;
+			}
+			
+			#addImg {
+				position: fixed;
+				z-index: 999;
+				right: 20px;
+				bottom: 40px;
+				width: 55px;
+				height: 55px;
+				background-image: url(../img/surveryaddImg.png);
+				background-repeat: no-repeat;
+				background-size: 100% 100%;
+			}
+			
+			a {
+				color: black;
+			}
+			
+			#survey a:active {
+				color: black;
+			}
+			
+			#survey .van-tabs__nav {
+				background-color: #E6E6E4;
+			}
+			
+			#survey .van-tabs--line .van-tabs__wrap {
+				height: 40px;
+			}
+			
+			#survey /deep/ .van-tab {
+				font-size: 15px;
+				line-height: 38px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="survey">
+			<div id="addImg"></div>
+			<div style="height: 42px;background: white;width: 100%;text-align: center;" id="showUserPicker">
+				<span style="line-height: 45px;font-size: 14px;position: absolute;left: 20px">当前基地:</span>
+				<span id="baseName" style="line-height: 43px;font-size: 14px;"></span>
+				<div id="triangle-down"></div>
+			</div>
+			<van-tabs v-model="active" :line-width="70" :line-height="2" animated swipeable @change="changeVan" id="refshi" :lazy-render="false">
+				<van-tab title="病虫害反馈">
+					<div id="bingchong">
+						<div id="bingchong-box" v-for="(datas,index) in illFeedbackDataList" v-if="illFeedbackDataList!=[]">
+							<a href="javascript:;" :data-guid="datas.id" @tap="open_detail(datas)">
+								<div style="flex: 1;position: relative;padding-left: 45px;padding-right: 30px;">
+									<img src="../img/survey01.png">
+									<span>{{datas.content}}</span>
+								</div>
+								<div style="flex: 1;position: relative;padding-left: 45px;padding-right: 30px;">
+									<img src="../img/survey03.png" v-if="datas.answerContent">
+									<img src="../img/survey02.png" v-if="!datas.answerContent">
+									<span v-if="datas.answerContent">专家已回答</span>
+									<span v-if="!datas.answerContent" style="color: #666666;">暂无回答</span>
+								</div>
+								<span class="mui-icon mui-icon-arrowright" style="display: inline-block;font-size: 19px;position: absolute;top: 20px;right: 5px;color: #C0C0C0;font-weight: 700;"></span>
+							</a>
+						</div>
+					</div>
+				</van-tab>
+				<van-tab title="巡视反馈">
+					<div id="bingchong">
+						<div id="bingchong-box" v-for="(datas,index) in feedbacklist" v-if="feedbacklist!=[]">
+							<a href="javascript:;" :data-guid="datas.id" @tap="open_details(datas)">
+								<div style="flex: 1;position: relative;padding-left: 45px;padding-right: 30px;">
+									<img src="../img/survey01.png">
+									<span>{{datas.content}}</span>
+								</div>
+								<div style="flex: 1;position: relative;padding-left: 45px;padding-right: 30px;">
+									<img src="../img/survey03.png" v-if="datas.status.displayName=='已处理'">
+									<img src="../img/survey02.png" v-if="datas.status.displayName!='已处理'">
+									<span v-if="datas.status.displayName=='已处理'">已处理</span>
+									<span v-if="datas.status.displayName!='已处理'" style="color: #666666;">未处理</span>
+								</div>
+								<span class="mui-icon mui-icon-arrowright" style="display: inline-block;font-size: 19px;position: absolute;top: 20px;right: 5px;color: #C0C0C0;font-weight: 700;"></span>
+							</a>
+						</div>
+					</div>
+				</van-tab>
+			</van-tabs>
+		</div>
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.1/lib/index.css">
+
+		<!-- 引入组件 -->
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vant@2.1/lib/vant.min.js"></script>
+		<script type="text/javascript" src="../js/libs/mui.zoom.js"></script>
+		<script type="text/javascript" src="../js/libs/mui.previewimage.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script type="text/javascript" src="../js/libs/mui.picker.min.js"></script>
+		<script type="text/javascript" src="../js/index.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				pullRefresh: {
+					container: "#refshi", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+					down: {
+						style: 'circle', //必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
+						color: '#2BD009', //可选，默认“#2BD009” 下拉刷新控件颜色
+						height: '50px', //可选,默认50px.下拉刷新控件的高度,
+						range: '100px', //可选 默认100px,控件可下拉拖拽的范围
+						offset: '0px', //可选 默认0px,下拉刷新控件的起始位置
+						auto: false, //可选,默认false.首次加载自动上拉刷新一次
+						callback: pulldownRefresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+					},
+					up: {
+						height: 40, //可选.默认50.触发上拉加载拖动距离
+						auto: false, //可选,默认false.自动上拉加载一次
+						contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
+						contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容
+						callback: pullupRefresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据
+					}
+				}
+			});
+			mui.previewImage();
+			var oglHeight = document.querySelector("body").offsetHeight;
+			var baseId = "";
+			var saveBaseId = "";
+			var Vue = window.Vue;
+			var vant = window.vant;
+
+			var vantname = 0;
+			// 注册 Lazyload 组件
+			Vue.use(vant.Lazyload).use(vant.DropdownMenu).use(vant.DropdownItem).use(vant.Toast);
+			// 调用函数式组件
+			var survey = new Vue({
+				el: '#survey',
+				data: {
+					active: 0,
+					textareaAll: '',
+					illFeedbackData: {},
+					illFeedbackDataList: [],
+					value1: 0,
+					option1: [{
+						text: '全部',
+						value: -1
+					}],
+					baseOrder: [],
+					imgphoto01: "",
+					imgphoto02: "",
+					imgphoto03: "",
+					imgphoto04: "",
+					feedbacklist: [],
+					feedbackdata: {},
+				}
+			});
+
+			var lastPage = -1;
+			var pageNo = 1;
+			var pageSize = 5;
+			var lastPage = -1;
+
+			var obj = {};
+
+			mui.plusReady(function() {
+				ajaxs(getBaseByUid, 'get').then(function(response) {
+					survey.baseOrder = response.result;
+					if(survey.baseOrder.length > 0) {
+						/*survey.value1 = survey.baseOrder[0].id;
+						baseId = survey.baseOrder[0].id;
+						saveBaseId = survey.baseOrder[0].id;*/
+						document.getElementById('baseName').innerText = "全部";
+						for(let i = 0; i < survey.baseOrder.length; i++) {
+							survey.option1.push({
+								text: survey.baseOrder[i].baseName,
+								value: survey.baseOrder[i].id
+							});
+						}
+					}
+				}).catch(function(error) {
+
+				})
+
+				ajaxs(illFeedbackList, 'get').then(function(response) {
+					survey.illFeedbackData = response.result;
+					if(response.result.list != "" && response.result.list != undefined) {
+						survey.illFeedbackDataList = response.result.list
+					} else {
+						survey.illFeedbackDataList = [];
+						mui('#refshi').pullRefresh().endPullupToRefresh(true);
+						mui('#refshi').pullRefresh().disablePullupToRefresh();
+					}
+					if(response.result) {
+						lastPage = response.result.lastPage
+					}
+				}).catch(function(error) {
+
+				})
+
+				ajaxs(getfeedBacklists, 'get').then(function(response) {
+					survey.feedbackdata = response.result;
+					if(response.result.list != "" && response.result.list != undefined) {
+						survey.feedbacklist = response.result.list
+					} else {
+						survey.feedbacklist = [];
+						mui('#refshi').pullRefresh().endPullupToRefresh(true);
+						mui('#refshi').pullRefresh().disablePullupToRefresh();
+					}
+					if(response.result) {
+						lastPage = response.result.lastPage
+					}
+				}).catch(function(error) {
+
+				})
+
+				var textAlls = "";
+
+				document.getElementById('addImg').addEventListener('tap', function() {
+					if(vantname == 0) {
+						mui.openWindow({
+							url: 'addpestDiag.html',
+							id: 'addpestDiag',
+							waiting: {
+								autoShow: false, //自动显示等待框，默认为true
+							}
+						})
+					} else {
+						mui.openWindow({
+							url: 'addpestDiags.html',
+							id: 'addpestDiags',
+							waiting: {
+								autoShow: false, //自动显示等待框，默认为true
+							}
+						})
+					}
+				})
+			})
+
+			window.addEventListener('refreshs', function(e) { //执行刷新
+				pulldownRefresh();
+			});
+
+			function isopen() {
+				plus.webview.currentWebview().setPullToRefresh({
+					support: false
+				});
+				document.getElementsByTagName("body")[0].classList.add("nscroll");
+			}
+
+			function isclose() {
+				plus.webview.currentWebview().setPullToRefresh({
+					support: true,
+					style: "circle"
+				});
+				document.getElementsByTagName("body")[0].classList.remove("nscroll");
+			}
+
+			function changes(value) {
+				baseId = value;
+				pageNo = 1;
+				if(vantname == 0) {
+					if(baseId == -1) {
+						ajaxs(illFeedbackList, 'get').then(function(response) {
+							if(response.result.list != "" && response.result.list != undefined) {
+								if(vantname == 0) {
+									mui('#refshi').pullRefresh().refresh(true);
+									mui('#refshi').pullRefresh().enablePullupToRefresh();
+								}
+								survey.illFeedbackDataList = response.result.list
+							} else {
+								survey.illFeedbackDataList = [];
+								mui('#refshi').pullRefresh().endPullupToRefresh(true);
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result.list.length < 5) {
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result) {
+								lastPage = response.result.lastPage
+							}
+						}).catch(function(error) {
+
+						})
+					} else {
+						ajaxs(illFeedbackList + "?baseId=" + baseId, 'get').then(function(response) {
+							if(response.result.list != "" && response.result.list != undefined) {
+								if(vantname == 0) {
+									mui('#refshi').pullRefresh().refresh(true);
+									mui('#refshi').pullRefresh().enablePullupToRefresh();
+								}
+								survey.illFeedbackDataList = response.result.list
+							} else {
+								survey.illFeedbackDataList = [];
+								mui('#refshi').pullRefresh().endPullupToRefresh(true);
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result.list.length < 5) {
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result) {
+								lastPage = response.result.lastPage
+							}
+						}).catch(function(error) {
+
+						})
+					}
+				} else {
+					if(baseId == -1) {
+						ajaxs(getfeedBacklists, 'get').then(function(response) {
+							if(response.result.list != "" && response.result.list != undefined) {
+								mui('#refshi').pullRefresh().refresh(true);
+								mui('#refshi').pullRefresh().enablePullupToRefresh();
+								survey.feedbacklist = response.result.list
+							} else {
+								survey.feedbacklist = [];
+								mui('#refshi').pullRefresh().endPullupToRefresh(true);
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result.list.length < 5) {
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result) {
+								lastPage = response.result.lastPage
+							}
+						}).catch(function(error) {
+
+						})
+					} else {
+						ajaxs(getfeedBacklists + "?baseId=" + baseId, 'get').then(function(response) {
+							if(response.result.list != "" && response.result.list != undefined) {
+								mui('#refshi').pullRefresh().refresh(true);
+								mui('#refshi').pullRefresh().enablePullupToRefresh();
+								survey.feedbacklist = response.result.list
+							} else {
+								survey.feedbacklist = [];
+								mui('#refshi').pullRefresh().endPullupToRefresh(true);
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result.list.length < 5) {
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result) {
+								lastPage = response.result.lastPage
+							}
+						}).catch(function(error) {
+
+						})
+					}
+				}
+			}
+
+			Array.prototype.indexOf = function(val) {
+				for(var i = 0; i < this.length; i++) {
+					if(this[i] == val) return i;
+				}
+				return -1;
+			};
+
+			Array.prototype.remove = function(val) {
+				var index = this.indexOf(val);
+				if(index > -1) {
+					this.splice(index, 1);
+				}
+			};
+
+			// 拍照添加文件
+			function getImage(value) {
+				plus.camera.getCamera().captureImage(function(p) { 
+					plus.io.resolveLocalFileSystemURL(p, function(entry) {          
+						entry.file(function(metadata) {
+							for(let index in metadata) {
+								if(index == "size") {
+									var sizeImg = metadata[index] / 1024 / 1024;
+									if(sizeImg > 1.5) {
+										compressImage(entry.toLocalURL(), entry.name, value)
+									} else {
+										upload(entry.toLocalURL(), value);
+									}
+								}
+							}
+						}, function(e) {
+
+						});       
+					}, function(e) {          
+						mui.toast("读取拍照文件错误：" + e.message);        
+					}); 
+				});
+			}
+
+			// 从相册添加文件
+			function galleryImg(value) {
+				plus.gallery.pick(function(p) {
+					plus.io.resolveLocalFileSystemURL(p, function(entry) { 
+						entry.file(function(metadata) {
+							for(let index in metadata) {
+								if(index == "size") {
+									var sizeImg = metadata[index] / 1024 / 1024;
+									console.log(sizeImg)
+									if(sizeImg > 1.5) {
+										compressImage(entry.toLocalURL(), entry.name, value)
+									} else {
+										upload(entry.toLocalURL(), value);
+									}
+								}
+							}
+						}, function(e) {
+
+						});
+					}, function(e) {          
+						mui.toast("读取照片错误：" + e.message);        
+					});
+				});
+			}
+
+			/**
+			 * 压缩图片 
+			 * @param {string} url：图片绝对路径
+			 * @param {string} filename：图片名称
+			 * @param {string} divid：图片容器id
+			 */
+			function compressImage(url, filename, value) {
+				console.log(url); //file:///storage/emulated/0/Pictures/Screenshots/S70915-001739.jpg
+				var path = "_doc/upload/" + filename; //_doc/upload/F_SMP-1467602809090.jpg  
+				plus.zip.compressImage({
+						src: url, //src: (String 类型 )压缩转换原始图片的路径  
+						dst: path, //压缩转换目标图片的路径  
+						quality: 20, //quality: (Number 类型 )压缩图片的质量.取值范围为1-100  
+						overwrite: true //overwrite: (Boolean 类型 )覆盖生成新文件  
+					},
+					function(event) {
+						//event.target获取压缩转换后的图片url路  
+						console.log(event.target);
+						upload(event.target, value);
+					},
+					function(error) {
+						mui.toast("压缩图片失败，请稍候再试");
+					});
+			}
+
+			function getShow(value, p) {
+				var url = "";
+				if(value == "1") {
+					url = survey.imgphoto01;
+					document.getElementById("issignimg01src").src = pictures + url;
+				} else if(value == "2") {
+					url = survey.imgphoto02;
+					document.getElementById("issignimg02src").src = pictures + url;
+				} else if(value == "3") {
+					url = survey.imgphoto03;
+					document.getElementById("issignimg03src").src = pictures + url;
+				} else {
+					url = survey.imgphoto04;
+					document.getElementById("issignimg04src").src = pictures + url;
+				}
+			}
+
+			var isremove01 = "";
+			var isremove02 = "";
+			var isremove03 = "";
+			var isremove04 = "";
+			var removeAll = [];
+
+			function upload(p, value) {
+				var wt = plus.nativeUI.showWaiting();
+				var task = plus.uploader.createUpload(api + addFeedBackPic, {
+						method: "POST"
+					},
+					function(t, status) { //上传完成
+						var objects = JSON.parse(t.responseText);
+						if(objects.success) {
+							removeAll.push(objects.result.id);
+							mui.toast(objects.message);
+							if(value == "1") {
+								isremove01 = objects.result.id;
+								survey.imgphoto01 = objects.result.pictureUrl;
+								document.getElementById('issignimg01').style.display = 'block';
+								document.getElementById('signimg01').style.display = 'none';
+							} else if(value == "2") {
+								isremove02 = objects.result.id;
+								survey.imgphoto02 = objects.result.pictureUrl;
+								document.getElementById('issignimg02').style.display = 'block';
+								document.getElementById('signimg02').style.display = 'none';
+							} else if(value == "3") {
+								isremove03 = objects.result.id;
+								survey.imgphoto03 = objects.result.pictureUrl;
+								document.getElementById('issignimg03').style.display = 'block';
+								document.getElementById('signimg03').style.display = 'none';
+							} else {
+								isremove04 = objects.result.id;
+								survey.imgphoto04 = objects.result.pictureUrl;
+								document.getElementById('issignimg04').style.display = 'block';
+								document.getElementById('signimg04').style.display = 'none';
+							}
+							getShow(value, p);
+							wt.close();
+						} else {
+							mui.toast(objects.message);
+							wt.close();
+						}
+					}
+				);
+				task.addFile(p, {
+					key: "file"
+				});
+				task.start();
+			}
+
+			(function($, doc) {
+				$.init();
+				$.ready(function() {
+					/**
+					 * 获取对象属性的值
+					 * 主要用于过滤三级联动中，可能出现的最低级的数据不存在的情况，实际开发中需要注意这一点；
+					 * @param {Object} obj 对象
+					 * @param {String} param 属性名
+					 */
+					var _getParam = function(obj, param) {
+						return obj[param] || '';
+					};
+					//普通示例
+					var userPicker = new $.PopPicker();
+					var showUserPickerButton = doc.getElementById('showUserPicker');
+					var userResult = doc.getElementById('userResult');
+					showUserPickerButton.addEventListener('tap', function(event) {
+						survey.baseOrder = [];
+						survey.option1 = [{
+							text: '全部',
+							value: -1
+						}];
+						ajaxs(getBaseByUid, 'get').then(function(response) {
+							survey.baseOrder = response.result;
+							if(survey.baseOrder.length > 0) {
+								for(let i = 0; i < survey.baseOrder.length; i++) {
+									survey.option1.push({
+										text: survey.baseOrder[i].baseName,
+										value: survey.baseOrder[i].id
+									});
+								}
+								userPicker.setData(survey.option1);
+							} else {
+								survey.option1 = [];
+								document.getElementById('baseName').innerText = "";
+								baseId = "";
+								userPicker.setData(survey.option1);
+							}
+						}).catch(function(error) {
+
+						})
+						plus.webview.currentWebview().setPullToRefresh({
+								support: false
+							});
+						userPicker.show(function(items) {
+							var jsons = JSON.parse(JSON.stringify(items[0]));
+							plus.webview.currentWebview().setPullToRefresh({
+									support: true,
+									style: "circle"
+								});
+							if(jsons.text == undefined) {
+								document.getElementById('baseName').innerText = "";
+								baseId = "";
+							} else {
+								document.getElementById('baseName').innerText = jsons.text;
+								changes(jsons.value);
+							}
+						});
+					}, false);
+				});
+			})(mui, document);
+
+			function changeVan(name) {
+				obj.data = name;
+				vantname = name;
+				pulldownRefresh(false);
+			}
+
+			function open_detail(datas) {
+				mui.openWindow({
+					url: 'pestDiag.html',
+					id: 'pestDiag',
+					extras: {
+						dataList: datas,
+					},
+					waiting: {
+						autoShow: false, //自动显示等待框，默认为true
+					}
+				})
+			}
+
+			function open_details(datas) {
+				mui.openWindow({
+					url: 'pestDiags.html',
+					id: 'pestDiags',
+					extras: {
+						dataList: datas,
+					},
+					waiting: {
+						autoShow: false, //自动显示等待框，默认为true
+					}
+				})
+			}
+
+			function pulldownRefresh(isshowss) {
+				pageNo = 1;
+				if(vantname == 0) {
+					if(baseId == '' || baseId == -1) {
+						ajaxs(illFeedbackList, 'get').then(function(response) {
+							if(response.result.list != "" && response.result.list != undefined) {
+								mui('#refshi').pullRefresh().refresh(true);
+								mui('#refshi').pullRefresh().enablePullupToRefresh();
+								survey.illFeedbackDataList = response.result.list
+							} else {
+								survey.illFeedbackDataList = [];
+								mui('#refshi').pullRefresh().endPullupToRefresh(true);
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result.list.length < 5) {
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result) {
+								lastPage = response.result.lastPage
+							}
+						}).catch(function(error) {
+
+						})
+					} else {
+						ajaxs(illFeedbackList + "?baseId=" + baseId, 'get').then(function(response) {
+							if(response.result.list != "" && response.result.list != undefined) {
+								mui('#refshi').pullRefresh().refresh(true);
+								mui('#refshi').pullRefresh().enablePullupToRefresh();
+								survey.illFeedbackDataList = response.result.list
+							} else {
+								survey.illFeedbackDataList = [];
+								mui('#refshi').pullRefresh().endPullupToRefresh(true);
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result.list.length < 5) {
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result) {
+								lastPage = response.result.lastPage
+							}
+						}).catch(function(error) {
+
+						})
+					}
+				} else {
+					if(baseId == '' || baseId == -1) {
+						ajaxs(getfeedBacklists, 'get').then(function(response) {
+							if(response.result.list != "" && response.result.list != undefined) {
+								mui('#refshi').pullRefresh().refresh(true);
+								mui('#refshi').pullRefresh().enablePullupToRefresh();
+								survey.feedbacklist = response.result.list
+							} else {
+								survey.feedbacklist = [];
+								mui('#refshi').pullRefresh().endPullupToRefresh(true);
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result.list.length < 5) {
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result) {
+								lastPage = response.result.lastPage
+							}
+						}).catch(function(error) {
+
+						})
+					} else {
+						ajaxs(getfeedBacklists + "?baseId=" + baseId, 'get').then(function(response) {
+							if(response.result.list != "" && response.result.list != undefined) {
+								mui('#refshi').pullRefresh().refresh(true);
+								mui('#refshi').pullRefresh().enablePullupToRefresh();
+								survey.feedbacklist = response.result.list
+							} else {
+								survey.feedbacklist = [];
+								mui('#refshi').pullRefresh().endPullupToRefresh(true);
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result.list.length < 5) {
+								mui('#refshi').pullRefresh().disablePullupToRefresh();
+							}
+							if(response.result) {
+								lastPage = response.result.lastPage
+							}
+						}).catch(function(error) {
+
+						})
+					}
+				}
+				mui('#refshi').pullRefresh().endPulldownToRefresh();
+				if(!isshowss){
+					
+				}else{
+					mui.toast('刷新成功!')
+				}
+			}
+
+			function pullupRefresh() {
+				if(lastPage == undefined) {
+					mui('#plantAl').pullRefresh().disablePullupToRefresh();
+					return;
+				}
+				pageNo += 1;
+				if(lastPage < pageNo) {
+					mui('#refshi').pullRefresh().endPullupToRefresh(true);
+					return;
+				}
+				if(vantname == 0) {
+					if(baseId == '' || baseId == -1) {
+						ajaxs(illFeedbackList + "?pageNo=" + pageNo + "&pageSize=" + pageSize, 'get').then(function(response) {
+							if(response.result.list != "" && response.result.list != undefined) {
+								var newArr = response.result.list;
+								survey.illFeedbackDataList = [...survey.illFeedbackDataList, ...newArr];
+							} else {
+
+							}
+							if(response.result) {
+								lastPage = response.result.lastPage
+							}
+							mui('#refshi').pullRefresh().endPullupToRefresh();
+						}).catch(function(error) {
+
+						})
+					} else {
+						ajaxs(illFeedbackList + "?baseId=" + baseId + "&pageNo=" + pageNo + "&pageSize=" + pageSize, 'get').then(function(response) {
+							if(response.result.list != "" && response.result.list != undefined) {
+								var newArr = response.result.list;
+								survey.illFeedbackDataList = [...survey.illFeedbackDataList, ...newArr];
+							} else {
+
+							}
+							if(response.result) {
+								lastPage = response.result.lastPage
+							}
+							mui('#refshi').pullRefresh().endPullupToRefresh();
+						}).catch(function(error) {
+
+						})
+					}
+				} else {
+					if(baseId == '' || baseId == -1) {
+						ajaxs(getfeedBacklists + "?pageNo=" + pageNo + "&pageSize=" + pageSize, 'get').then(function(response) {
+							if(response.result.list != "" && response.result.list != undefined) {
+								var newArr = response.result.list;
+								survey.feedbacklist = [...survey.feedbacklist, ...newArr];
+							} else {
+
+							}
+							if(response.result) {
+								lastPage = response.result.lastPage
+							}
+							mui('#refshi').pullRefresh().endPullupToRefresh();
+						}).catch(function(error) {
+
+						})
+					} else {
+						ajaxs(getfeedBacklists + "?baseId=" + baseId + "&pageNo=" + pageNo + "&pageSize=" + pageSize, 'get').then(function(response) {
+							if(response.result.list != "" && response.result.list != undefined) {
+								var newArr = response.result.list;
+								survey.feedbacklist = [...survey.feedbacklist, ...newArr];
+							} else {
+
+							}
+							if(response.result) {
+								lastPage = response.result.lastPage
+							}
+							mui('#refshi').pullRefresh().endPullupToRefresh();
+						}).catch(function(error) {
+
+						})
+					}
+				}
+				/*mui('#refshi').pullRefresh().endPullupToRefresh();*/
+			}
+
+			mui(document.body).on('tap', '.mui-backdrop', function(event) {
+				if(vantname == 0) {
+					plus.webview.currentWebview().setPullToRefresh({
+						support: true,
+						style: "circle"
+					});
+				}
+			})
+
+			mui(document.body).on('tap', '.mui-poppicker-btn-cancel', function(event) {
+				if(vantname == 0) {
+					plus.webview.currentWebview().setPullToRefresh({
+						support: true,
+						style: "circle"
+					});
+				}
+			})
+		</script>
+	</body>
+
+</html>

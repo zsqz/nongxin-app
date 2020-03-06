@@ -1,0 +1,361 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/iconfont.css" />
+		<link href="css/index.css" rel="stylesheet" />
+		<style>
+			.mui-tab-item {
+				position: relative;
+			}
+			
+			.mui-bar-nav {
+				background-color: #12B482;
+			}
+			
+			.mui-bar-tab {
+				background-color: white;
+				height: 45px !important;
+				line-height: 45px !important;
+				box-shadow: inset 0px 1px 0px 0px #DCDCDC;
+				z-index: 200;
+			}
+			
+			.mui-bar-tab .mui-tab-item {
+				height: 0px;
+			}
+			
+			.mui-active {
+				color: #12B482 !important;
+			}
+			
+			.mui-title {
+				color: white;
+				font-size: 17px;
+			}
+			
+			.accressDiv {
+				height: 55%;
+				width: 1px;
+				background-color: #979797;
+				position: absolute;
+				right: 0px;
+				top: 8px;
+			}
+			
+			.touchColor {
+				background-color: red;
+			}
+			
+			.mui-btn-block {
+				width: 30%;
+				float: right;
+			}
+			
+			.mui-backdrop {
+				background-color: rgba(0, 0, 0, 0.8);
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav">
+			<i class="mui-icon mui-icon-left-nav iconfont icon-gerenzhongxin" id="iconMui" style="color: white;margin-left: 0px;"></i>
+			<h1 class="mui-title">种植任务</h1>
+		</header>
+		<nav class="mui-bar mui-bar-tab" id="muibartab" style="display: none;">
+			<a class="mui-tab-item mui-active" href="pages/plant.html" id="muiactive01">
+				<span class="mui-tab-label">种植任务</span>
+				<div class="accressDiv"></div>
+			</a>
+			<a class="mui-tab-item" href="pages/survey.html" id="muiactive02">
+				<span class="mui-tab-label">调查任务</span>
+				<div class="accressDiv"></div>
+			</a>
+			<a class="mui-tab-item" href="pages/warning.html" id="muiactive03">
+				<span class="mui-tab-label">预警任务</span>
+				<div class="accressDiv"></div>
+			</a>
+			<a class="mui-tab-item" href="pages/envControl.html" id="muiactive04">
+				<span class="mui-tab-label">环控中心</span>
+			</a>
+		</nav>
+		<script src="js/mui.min.js"></script>
+		<script src="js/libs/jquery-1.11.0.min.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			var Index = 0;
+			var subpages = ['pages/plant.html', 'pages/survey.html', 'pages/warning.html', 'pages/envControl.html'];
+			var subpage_style = {
+				top: '43px',
+				bottom: '45px'
+			};
+
+			var aniShow = {};
+			var pageNameAll = [];
+
+			var flag = false;
+			//创建遮罩蒙板
+			var mask = mui.createMask(function() {
+				//设置点击蒙板不会自动消失
+				//但调用close方法关闭mask时，必须返回true
+				return flag;
+			});
+			//监听自定事件
+			//打开遮罩蒙板
+			window.addEventListener("openMask", function(e) {
+				mask.show(); //显示遮罩
+			});
+			//关闭遮罩蒙板
+			window.addEventListener("closeMask", function(e) {
+				flag = true;
+				mask.close();
+			});
+
+			//创建子页面，首个选项卡页面显示，其它均隐藏；
+			mui.plusReady(function() {
+				/*var numbers = 0;
+				window.addEventListener('resize', function() {
+					numbers +=1;
+					if(numbers % 2 !=0){
+						document.getElementById("muibartab").style.display = 'none';
+					}else{
+						document.getElementById("muibartab").style.display = 'block';
+					}
+					console.log(numbers);
+				})*/
+
+				document.addEventListener("netchange", function() {
+					var nt = plus.networkinfo.getCurrentType();
+					switch(nt) {
+						case plus.networkinfo.CONNECTION_ETHERNET:
+						case plus.networkinfo.CONNECTION_WIFI:
+						case plus.networkinfo.CONNECTION_CELL2G:
+						case plus.networkinfo.CONNECTION_CELL3G:
+						case plus.networkinfo.CONNECTION_CELL4G:
+							ajaxs(getUserMenu, 'get').then(function(response) {
+								if(response.success) {
+									var pageAll = response.result;
+									for(let index in pageAll) {
+										var url = "";
+										if(pageAll[index].name == "种植任务") {
+											url = "pages/plant.html";
+											localStorage.setItem('accredit', true);
+										} else if(pageAll[index].name == "调查任务") {
+											url = "pages/survey.html"
+										} else if(pageAll[index].name == "预警任务") {
+											url = "pages/warning.html"
+										} else if(pageAll[index].name == "环控任务") {
+											url = "pages/envControl.html"
+										}
+										console.log(url);
+										pageNameAll.push(url);
+									}
+									var allPage = getArrDifference(pageNameAll, subpages);
+									if(allPage != "") {
+										for(let indexs in allPage) {
+											if(allPage[indexs] == "pages/plant.html") {
+												localStorage.setItem('accredit', false);
+											} else if(allPage[indexs] == "pages/survey.html") {
+												document.getElementById('muiactive02').style.display = 'none';
+											} else if(allPage[indexs] == "pages/warning.html") {
+												document.getElementById('muiactive03').style.display = 'none';
+											} else if(allPage[indexs] == "pages/envControl.html") {
+												document.getElementById('muiactive04').style.display = 'none';
+											}
+										}
+									}
+									document.getElementById("muibartab").style.display = 'block';
+								}
+							}).catch(function(error) {
+
+							})
+							break;
+						default:
+							break;
+					}
+				}, false);
+
+				ajaxs(getUserMenu, 'get').then(function(response) {
+					console.log(JSON.stringify(response))
+					if(response.result == '') {
+						mui.hideLoading();
+						mask.close();
+						localStorage.clear();
+						mui.openWindow({
+							url: 'login.html',
+							id: 'login'
+						});
+						setTimeout(function() {
+							plus.webview.currentWebview().hide();
+							plus.webview.currentWebview().close();
+						}, 100);
+					}
+					if(response.success) {
+						var pageAll = response.result;
+						for(let index in pageAll) {
+							var url = "";
+							if(pageAll[index].name == "种植任务") {
+								url = "pages/plant.html";
+								localStorage.setItem('accredit', true);
+							} else if(pageAll[index].name == "调查任务") {
+								url = "pages/survey.html"
+							} else if(pageAll[index].name == "预警任务") {
+								url = "pages/warning.html"
+							} else if(pageAll[index].name == "环控任务") {
+								url = "pages/envControl.html"
+							}
+							pageNameAll.push(url);
+						}
+						var allPage = getArrDifference(pageNameAll, subpages);
+						if(allPage != "") {
+							for(let indexs in allPage) {
+								if(allPage[indexs] == "pages/plant.html") {
+									localStorage.setItem('accredit', false);
+								} else if(allPage[indexs] == "pages/survey.html") {
+									document.getElementById('muiactive02').style.display = 'none';
+								} else if(allPage[indexs] == "pages/warning.html") {
+									document.getElementById('muiactive03').style.display = 'none';
+								} else if(allPage[indexs] == "pages/envControl.html") {
+									document.getElementById('muiactive04').style.display = 'none';
+								}
+							}
+						}
+						document.getElementById("muibartab").style.display = 'block';
+					}
+				}).catch(function(error) {
+
+				})
+				var self = plus.webview.currentWebview();
+				for(var i = 0; i < 4; i++) {
+					var temp = {};
+					var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
+					if(i > 0) {
+						sub.hide();
+					} else {
+						temp[subpages[i]] = "true";
+						mui.extend(aniShow, temp);
+					}
+					self.append(sub);
+				}
+			});
+
+			function onStateChanged(download, status) {
+				var i = download.downloadedSize;
+				//换算成百分比
+				i *= 100 / 17.5;
+				for(let index in download) {
+					console.log(index)
+					console.log(download[index])
+				}
+				/*mui('body').progressbar({
+				    progress: i
+				}).show();*/
+				console.log(status);
+				console.log(download.state);
+				if(download.state == 4 && status == 200) {
+					// 下载完成 
+					console.log("111")
+				}
+			}
+
+			function getArrDifference(arr1, arr2) {
+				return arr1.concat(arr2).filter(function(v, i, arr) {
+					return arr.indexOf(v) === arr.lastIndexOf(v);
+				});
+			}
+
+			var activeTab = subpages[Index];
+			var title = document.querySelector(".mui-title");
+			//选项卡点击事件
+			mui('.mui-bar-tab').on('tap', 'a', function(e) {
+				/*activeTab = document.querySelector(".mui-active").getAttribute('href');*/
+				$(this).css('color', '#0d50a3').siblings().css('color', '#878a8e');
+				var targetTab = this.getAttribute('href');
+				if(targetTab == activeTab) {
+					return;
+				}
+				//更换标题
+				title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
+				//显示目标选项卡
+				if(mui.os.plus) {
+					// 显示目标webview
+					plus.webview.show(targetTab);
+					// 隐藏当前webview
+					plus.webview.hide(activeTab);
+					// 更改当前活跃的选项卡
+					activeTab = targetTab;
+				} else {
+					// 创建iframe代替子页面
+					createIframe('.mui-content', {
+						url: targetTab,
+						style: {
+							top: '43px', //设置距离顶部的距离
+							bottom: '45px' //设置距离底部的距离
+						}
+					});
+				}
+			});
+
+			function switchover() {
+				document.getElementById('muiactive02').classList.remove('mui-active');
+				document.getElementById('muiactive01').classList.add('mui-active');
+				activeTab = "pages/survey.html";
+				var targetTab = "pages/plant.html";
+				//更换标题
+				title.innerHTML = "种植任务";
+				//显示目标选项卡
+				if(mui.os.plus) {
+					plus.webview.hide(activeTab);
+					// 显示目标webview
+					plus.webview.show(targetTab);
+					// 隐藏当前webview
+					plus.webview.hide(activeTab);
+					// 更改当前活跃的选项卡
+					activeTab = targetTab;
+				} else {
+					// 创建iframe代替子页面
+					createIframe('.mui-content', {
+						url: targetTab,
+						style: {
+							top: '43px', //设置距离顶部的距离
+							bottom: '45px' //设置距离底部的距离
+						}
+					});
+				}
+			}
+
+			var first = null;
+			mui.back = function() {
+				//首次按键，提示 再按一次退出应用
+				if(!first) {
+					first = new Date().getTime(); //记录第一次按下回退键的时间
+					mui.toast("再按一次退出应用"); //给出提示
+					history.go(-1); //回退到上一页面
+					setTimeout(function() {
+						//1s中后清除
+						first = null;
+					}, 2000);
+				} else {
+					if(new Date().getTime() - first < 2000) {
+						//如果两次按下的时间小于1s，
+						plus.runtime.quit(); //那么就退出app
+					}
+				}
+			};
+			document.getElementById("iconMui").addEventListener('tap', function() {
+				mui.openWindow({
+					url: 'pages/personalCen.html',
+					id: 'personalCen'
+				})
+			})
+		</script>
+	</body>
+
+</html>

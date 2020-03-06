@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style>
+			.mui-preview-image.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			
+			.mui-preview-header,
+			.mui-preview-footer {
+				position: absolute;
+				width: 100%;
+				left: 0;
+				z-index: 10;
+			}
+			
+			.mui-preview-header {
+				height: 44px;
+				top: 0;
+			}
+			
+			.mui-preview-footer {
+				height: 50px;
+				bottom: 0px;
+			}
+			
+			.mui-preview-header .mui-preview-indicator {
+				display: block;
+				line-height: 25px;
+				color: #fff;
+				text-align: center;
+				margin: 15px auto 4;
+				width: 70px;
+				background-color: rgba(0, 0, 0, 0.4);
+				border-radius: 12px;
+				font-size: 16px;
+			}
+			
+			.mui-preview-image {
+				display: none;
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+			}
+			
+			.mui-preview-image.mui-preview-in {
+				-webkit-animation-name: fadeIn;
+				animation-name: fadeIn;
+			}
+			
+			.mui-preview-image.mui-preview-out {
+				background: none;
+				-webkit-animation-name: fadeOut;
+				animation-name: fadeOut;
+			}
+			
+			.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+				display: none;
+			}
+			
+			.mui-zoom-scroller {
+				position: absolute;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				-webkit-backface-visibility: hidden;
+			}
+			
+			.mui-zoom {
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+			
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
+			
+			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+				width: 100%;
+			}
+			
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+				display: inline-table;
+			}
+			
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			
+			.mui-preview-loading {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+			
+			.mui-preview-loading.mui-active {
+				display: block;
+			}
+			
+			.mui-preview-loading .mui-spinner-white {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -25px;
+				margin-top: -25px;
+				height: 50px;
+				width: 50px;
+			}
+			
+			.mui-preview-image img.mui-transitioning {
+				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+				transition: transform 0.5s ease, opacity 0.5s ease;
+			}
+			
+			@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			
+			p img {
+				max-width: 100%;
+				height: auto;
+			}
+			
+			.mui-bar {
+				background-color: #13B482;
+			}
+			
+			.mui-bar-nav {
+				top: 0;
+				-webkit-box-shadow: 0 0px 0px #ccc;
+			}
+			
+			.mui-title {
+				line-height: 97px;
+				color: white;
+				font-weight: bolder;
+				font-size: 19px;
+			}
+			
+			.mui-bar {
+				height: 80px;
+			}
+			
+			.mui-bar .mui-icon {
+				padding-top: 37px;
+				color: white;
+			}
+			
+			.colorBlue {
+				color: #2B95FF;
+			}
+			
+			.colorRed {
+				color: red;
+			}
+			
+			.img-box {
+				flex: 0 0 50%;
+				align-items: center;
+				justify-content: center;
+				padding: 0px 2.5px;
+				position: relative;
+				height: 150px;
+				overflow: hidden;
+			}
+			
+			.img-box-src {
+				display: block;
+				transform: translate(-50%, -50%);
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				height: 110%;
+				width: 100%;
+			}
+			
+			.square {
+				/* padding百分比是相对父元素宽度计算的 */
+				margin-top: 10px;
+			}
+			
+			.square-inner {
+				/* 铺满父元素容器，这时候宽高就始终相等了 */
+			}
+			
+			.square-inner>li {
+				width: calc(98% / 2);
+				/* calc里面的运算符两边要空格 */
+				height: calc(98% / 2);
+				margin-right: 1.5%;
+				margin-bottom: 1.5%;
+				overflow: hidden;
+			}
+			
+			.flex {
+				display: flex;
+				flex-wrap: wrap;
+			}
+			
+			.flex>li {
+				flex-grow: 1;
+				/* 子元素按1/n的比例进行拉伸 */
+				text-align: center;
+				color: #fff;
+				font-size: 50px;
+				line-height: 2;
+				position: relative;
+				overflow: hidden;
+				min-height: 140px;
+			}
+			
+			.flex>li:nth-of-type(2n) {
+				/* 选择个数是3的倍数的元素 */
+				margin-right: 0;
+			}
+			
+			.flex>li:nth-of-type(n+7) {
+				/* 选择倒数的三个元素，n可以取0 */
+				margin-bottom: 0;
+			}
+			
+			.cost-div {
+				margin-top: 10px;
+			}
+			
+			.mui-backdrop {
+				background-color: #f7f7f7;
+			}
+			
+			.zhixingbox {
+				padding: 15px 0px 0px 0px;
+				margin-top: 10px;
+				background: white;
+				margin: 15px 0px;
+				border-radius: 10px;
+			}
+			
+			#zhixingboxsss {
+				display: none;
+			}
+			
+			.zhixinboxs {
+				font-size: 14px;
+				margin-top: 15px;
+				padding-bottom: 1px;
+				border-bottom: 1px solid rgba(238, 238, 238, 1);
+			}
+			
+			.bgs {
+				color: rgba(19, 180, 130, 1) !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="particul">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<h1 class="mui-title" id="headerName">{{datasAll.farmingName}}</h1>
+				<div style="position: absolute;top: 40%;right: 10px;color: white;z-index: 999;font-size: 15px;display: none;width: 50px;height: 30px;text-align: right;line-height: 30px;text-align: center;" id="goCompile">修改</div>
+			</header>
+			<div class="mui-content">
+				<div style="width: 100%;height: 100px;background-color: #13B482;"></div>
+				<div style="width: 100%;padding: 0px 15px;margin-top: -48px;">
+					<div style="width: 100%;background-color: white;border-radius: 10px;text-align: center;color: #666666;padding: 0px 15px 15px 15px;margin-bottom: 20px;">
+						<div id="loading01">
+							<img src="../img/loading.gif" width="100%">
+						</div>
+						<div id="loadDiv01" style="display: none;">
+							<div style="font-weight: 700;padding-top:20px;font-size: 16px;"><span>工单详情</span></div>
+							<div style="margin-top: 15px;font-size: 15px;"><span>{{datasAll.method}}</span></div>
+							<div class="square" v-if="pictureInfoList.length>0">
+								<ul class="square-inner flex" style="padding: 0px;margin-bottom: 0px;">
+									<li v-for="list in pictureInfoList"><img v-if="list.pictureUrl" :src="getShows(list.pictureUrl)" class="img-box-src" /><img v-if="list.pictureUrl" :src="getShow(list.pictureUrl)" class="img-box-src" data-preview-src="" data-preview-group="1" /></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div style="width: 100%;background-color: white;border-radius: 10px;text-align: center;color: #666666;padding: 0px 15px 15px 15px;margin-bottom: 20px;">
+						<div id="loading02">
+							<img src="../img/loading.gif" width="100%">
+						</div>
+						<div id="loadDiv02" style="display: none;">
+							<div style="font-weight: 700;font-size: 16px;padding-top:20px;"><span>农户反馈</span></div>
+							<div style="margin-top: 15px;font-size: 15px;"><span id="contentAlls"></span></div>
+							<div style="height: 35px;width: 100px;background: #F1F1F1;border-radius: 10px;position: relative;margin-top: 15px;display: none;" id="isAudioShow">
+								<img src="../img/yuyin.gif" id="yuyingif" style="position: absolute;width: 18px;top: 9px;left: 10px;" /><img src="../img/video01.png" id="yuyinpng" style="display: block;position: absolute;width: 18px;top: 9px;left: 10px;" /><span style="line-height: 39px;" id="totalTime"></span>
+							</div>
+							<div class="square" v-if="pictureInfoList01.length>0">
+								<ul class="square-inner flex" style="padding: 0px;margin-bottom: 0px;">
+									<li v-for="list in pictureInfoList01"><img v-if="list.pictureUrl" :src="getShows(list.pictureUrl)" class="img-box-src" /><img v-if="list.pictureUrl" :src="getShow(list.pictureUrl)" class="img-box-src" data-preview-src="" data-preview-group="2" /></li>
+								</ul>
+							</div>
+							<div style="text-align: left;margin-top: 15px;display: none;font-size: 15px;" id="remarkAlls">
+								<span>审核留言:&nbsp;&nbsp;<span style="color: red;" id="remarkAll"></span></span>
+							</div>
+						</div>
+					</div>
+					<div style="width: 100%;background-color: white;border-radius: 10px;text-align: center;color: #666666;padding: 0px 15px 15px 15px;margin-bottom: 20px;">
+						<div id="loading03">
+							<img src="../img/loading.gif" width="100%">
+						</div>
+						<div id="loadDiv03" style="display: none;">
+							<div style="font-weight: 700;font-size: 16px;padding-top:20px;"><span>费用信息</span></div>
+							<div v-if="deviceActList!=''" style="font-size: 15px;">
+								<div style="margin-top: 20px;"><span>设备信息</span></div>
+								<div style="text-align: left;margin-top: 20px;" v-for="(datas,index) in deviceActList">
+									<div class="cost-div"><span>名称:&nbsp;&nbsp;<span>{{datas.deviceName}}</span></span>
+									</div>
+									<div class="cost-div"><span>计划单价:&nbsp;&nbsp;<span>{{datas.preUnitPrice}}元</span></span>
+									</div>
+									<div class="cost-div"><span>计划总量:&nbsp;&nbsp;<span>{{datas.preUnitCount}}{{datas.company}}</span></span>
+									</div>
+									<div class="cost-div"><span>实际单价:&nbsp;&nbsp;<span>{{datas.actUnitPrice}}元</span></span>
+									</div>
+									<div class="cost-div"><span>实际总量:&nbsp;&nbsp;<span>{{datas.actUnitCount}}{{datas.company}}</span></span>
+									</div>
+								</div>
+							</div>
+							<div v-if="personnelActList!=''" style="font-size: 15px;">
+								<div style="margin-top: 20px;"><span>人员信息</span></div>
+								<div style="text-align: left;margin-top: 20px;" v-for="(datas,index) in personnelActList">
+									<div class="cost-div"><span>名称:&nbsp;&nbsp;<span>{{datas.personName}}</span></span>
+									</div>
+									<div class="cost-div"><span>计划人天数:&nbsp;&nbsp;<span>{{datas.preUnitCount}}人/天</span></span>
+									</div>
+									<div class="cost-div"><span>计划工资:&nbsp;&nbsp;<span>{{datas.preUnitPrice}}元/人天</span></span>
+									</div>
+									<div class="cost-div"><span>实际人天数:&nbsp;&nbsp;<span>{{datas.actUnitCount}}人/天</span></span>
+									</div>
+									<div class="cost-div"><span>实际工资:&nbsp;&nbsp;<span>{{datas.actUnitPrice}}元/人天</span></span>
+									</div>
+								</div>
+							</div>
+							<div v-if="materialActList!=''" style="font-size: 15px;">
+								<div style="margin-top: 20px;"><span>物料信息</span></div>
+								<div style="text-align: left;margin-top: 20px;" v-for="(datas,index) in materialActList">
+									<div class="cost-div"><span>名称:&nbsp;&nbsp;<span>{{datas.materialName}}</span></span>
+									</div>
+									<div class="cost-div"><span>计划单价:&nbsp;&nbsp;<span>{{datas.preUnitPrice}}元</span></span>
+									</div>
+									<div class="cost-div"><span>计划总量:&nbsp;&nbsp;<span>{{datas.preUnitCount}}{{datas.company}}</span></span>
+									</div>
+									<div class="cost-div"><span>实际单价:&nbsp;&nbsp;<span>{{datas.actUnitPrice}}元</span></span>
+									</div>
+									<div class="cost-div"><span>实际总量:&nbsp;&nbsp;<span>{{datas.actUnitCount}}{{datas.company}}</span></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="zhixingbox" v-if="orderall!=''" id="zhixingboxsss">
+						<div style="text-align: center;margin: 5px 0px;"><span>申请再次执行</span></div>
+						<div class="zhixinboxs" v-for="(item,index) in orderall" :key="index">
+							<div style="padding: 0px 15px 15px 15px;">
+								<div style="position: relative;">
+									<div style="position: absolute;"><span style="color:rgba(153,153,153,1);">申请报告</span></div>
+									<div style="margin-left: 68px;">{{item.applyContent}}</div>
+								</div>
+								<div style="height: 35px;width: 100px;background: #F1F1F1;border-radius: 10px;position: relative;margin-top: 15px;text-align: center;" v-if="item.fileInfo!=null" @tap="open_video(item.fileInfo)">
+									<img src="../img/video01.png" id="yuyinpng" style="display: block;position: absolute;width: 18px;top: 9px;left: 10px;" /><span style="line-height: 39px;" v-html="getvide(item.fileInfo)"></span>
+								</div>
+							</div>
+							<div style="margin:0px 15px;">
+								<div><span style="color:rgba(153,153,153,1);display: inline-block;margin-right: 10px;">申请时间</span>{{item.subTime}}</div>
+								<div><span style="color:rgba(153,153,153,1);display: inline-block;margin: 10px 10px 0px 0px;">审批时间</span><span v-if="item.processTime">{{item.processTime}}</span><span v-if="!item.processTime">暂无</span></div>
+								<div><span style="color:rgba(153,153,153,1);display: inline-block;margin: 10px 10px 0px 0px;">审批备注</span><span v-if="item.remark">{{item.remark}}</span><span v-if="!item.remark">暂无</span></div>
+								<div style="margin: 10px 0px;color: red;" :class="item.agree.displayName=='同意'?'bgs':''"><span>{{item.agree.displayName}}</span></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/libs/mui.zoom.js"></script>
+		<script src="../js/libs/mui.previewimage.js"></script>
+		<script type="text/javascript" src="../js/libs/vue.min.js"></script>
+		<script type="text/javascript" src="../js/index.js"></script>
+		<script>
+			var audiopath = "";
+			var isaudioplay = false;
+			var items = "";
+			/*var flag=false;
+			var masks = mui.createMask(function(){
+				//设置点击蒙板不会自动消失
+				//但调用close方法关闭mask时，必须返回true
+				return flag;
+			});
+			masks.show();*/
+
+			var particul = new Vue({
+				el: '#particul',
+				data: {
+					datasAll: {},
+					pictureInfoList: [],
+					pictureInfoList01: [],
+					deviceActList: [],
+					materialActList: [],
+					personnelActList: [],
+					orderall: {},
+				}
+			});
+
+			mui.previewImage();
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				items = self.items
+				var states = localStorage.getItem("state");
+				if(states == 'NOT_AUDITED') {
+					if(items.allowedExecute) {
+						document.getElementById("goCompile").style.display = 'block';
+					} else {
+						if(compareDate(items.executionTime, getdate()) && compareDate(getdate(), items.endTime)) {
+							document.getElementById("goCompile").style.display = 'block';
+						}
+					}
+				}
+				if(states == 'AUDIT_FAILED') {
+					if(items.allowedExecute) {
+						document.getElementById("goCompile").style.display = 'block';
+					} else {
+						if(compareDate(items.executionTime, getdate()) && compareDate(getdate(), items.endTime)) {
+							document.getElementById("goCompile").style.display = 'block';
+						}
+					}
+				}
+				var ids = localStorage.getItem("ids");
+				var baseids = localStorage.getItem("onlyId");
+				if(ids != "" && ids != null) {
+					console.log(ids)
+					ajaxs(selectByIdwork + "?id=" + ids, 'get').then(function(response) {
+						document.getElementById("loading01").style.display = 'none';
+						document.getElementById("loadDiv01").style.display = 'block';
+						particul.datasAll = response.result;
+						localStorage.setItem('titlespar', particul.datasAll.farmingName);
+						if(response.result.pictureInfoList != "" && response.result.pictureInfoList != []) {
+							particul.pictureInfoList = response.result.pictureInfoList;
+							if(response.result.pictureInfoList.length < 4) {
+								var indexNum = 4 - response.result.pictureInfoList.length;
+								if(indexNum == 1) {
+									for(let i = 0; i < indexNum; i++) {
+										particul.pictureInfoList.push({
+											id: -4 + i,
+											pictureUrl: ""
+										});
+									}
+								}
+								if(indexNum == 3) {
+									for(let is = 0; is < 1; is++) {
+										particul.pictureInfoList.push({
+											id: -4 + is,
+											pictureUrl: ""
+										});
+									}
+								}
+							}
+						}
+					}).catch(function(error) {
+
+					})
+					ajaxs(selectByIdwork + "?id=" + baseids, 'get').then(function(response) {
+						if(response.success) {
+							document.getElementById("loading02").style.display = 'none';
+							document.getElementById("loadDiv02").style.display = 'block';
+							if(response.result.orderContent != null) {
+								if(response.result.orderContent != null) {
+									var string = response.result.orderContent.content;
+									string = string.replace(/\r\n/g,"<br>");
+									string = string.replace(/\n/g,"<br>");
+									string = string.replace(/\s/g,"&nbsp;");
+									document.getElementById("contentAlls").innerHTML = string;
+								}
+							}
+							if(response.result.pictureInfoList != "" && response.result.pictureInfoList != []) {
+								particul.pictureInfoList01 = response.result.pictureInfoList;
+								if(response.result.pictureInfoList.length < 4) {
+									var indexNum = 4 - response.result.pictureInfoList.length;
+									if(indexNum == 1) {
+										for(let i = 0; i < indexNum; i++) {
+											particul.pictureInfoList01.push({
+												id: -4 + i,
+												pictureUrl: ""
+											});
+										}
+									}
+									if(indexNum == 3) {
+										for(let is = 0; is < 1; is++) {
+											particul.pictureInfoList01.push({
+												id: -4 + is,
+												pictureUrl: ""
+											});
+										}
+									}
+								}
+							}
+							if(response.result.remark != null && response.result.remark != '') {
+								document.getElementById("remarkAlls").style.display = 'block';
+								var string = response.result.remark;
+								string = string.replace(/\r\n/g,"<br>")
+								string = string.replace(/\n/g,"<br>");
+								string = string.replace(/\s/g,"&nbsp;");
+								document.getElementById("remarkAll").innerHTML = string;
+							}
+							if(response.result.fileInfo != null) {
+								document.getElementById('isAudioShow').style.display = 'block';
+								var times = response.result.fileInfo.remark;
+								document.getElementById("totalTime").innerHTML = times + '"';
+								audiopath = api + getAudio + "?fileUrl=" + response.result.fileInfo.fileUrl;
+							}
+						}
+					}).catch(function(error) {
+
+					})
+					ajaxs(getOrderCosts + "?id=" + baseids, 'get').then(function(response) {
+						if(response.success) {
+							document.getElementById("loading03").style.display = 'none';
+							document.getElementById("loadDiv03").style.display = 'block';
+							particul.deviceActList = response.result.deviceActList;
+							particul.materialActList = response.result.materialActList;
+							particul.personnelActList = response.result.personnelActList;
+						}
+					}).catch(function(error) {
+
+					})
+
+				}
+
+				document.getElementById('isAudioShow').addEventListener('tap', function() {
+					if(isaudioplay) {
+						isaudioplay = false;
+					} else {
+						isaudioplay = true;
+					}
+					if(isaudioplay) {
+						startPlay(audiopath);
+					} else {
+						var player = plus.audio.createPlayer(audiopath);
+						stopPlay(player);
+						mui.toast('停止播放')
+					}
+				})
+
+				document.getElementById('goCompile').addEventListener('tap', function() {
+					mui.openWindow({
+						url: 'tasks.html',
+						id: 'tasks',
+						extras: {
+							isUpdata: true,
+						},
+						waiting: {
+							autoShow: false, //自动显示等待框，默认为true
+						}
+					})
+				})
+
+				ajaxs(getOrderApply + "?orderId=" + baseids, 'get').then(function(res) {
+					if(res.success) {
+						particul.orderall = res.result;
+						if(particul.orderall != '') {
+							document.getElementById('zhixingboxsss').style.display = 'block';
+						}
+					}
+				}).catch(function(error) {
+
+				})
+			})
+
+			function getdate() {
+				var day2 = new Date();
+				day2.setTime(day2.getTime());
+				var s2 = day2.getFullYear() + "-" + (day2.getMonth() + 1) + "-" + day2.getDate();
+				return s2;
+			}
+
+			function compareDate(s1, s2) {
+				return((new Date(s1.replace(/-/g, "\/"))) <= (new Date(s2.replace(/-/g, "\/"))));
+			}
+
+			function getShow(url) {
+				return pictures + url;
+			}
+
+			function getShows(url) {
+				return compression + url + "/100/100";
+			}
+
+			function startPlay(path) {
+				mui.toast("开始播放");
+				document.getElementById('yuyinpng').style.display = 'none';
+				document.getElementById('yuyingif').style.display = 'block';
+				player = plus.audio.createPlayer(path);
+				player.play(function() {
+					mui.toast("播放完成");
+					isaudioplay = false;
+					document.getElementById('yuyinpng').style.display = 'block';
+					document.getElementById('yuyingif').style.display = 'none';
+					stopPlay(player);
+				}, function(e) {
+					mui.toast("播放失败");
+				});
+			}
+
+			// 停止播放
+			function stopPlay() {
+				player.stop();
+				document.getElementById('yuyinpng').style.display = 'block';
+				document.getElementById('yuyingif').style.display = 'none';
+				player = "";
+			}
+
+			var playerss = "";
+
+			function startPlayss(path) {
+				var paths = api + getAudio + "?fileUrl=" + path
+				mui.toast("开始播放");
+				playerss = plus.audio.createPlayer(paths);
+				playerss.play(function() {
+					mui.toast("播放完成");
+					stopPlayss(playerss);
+				}, function(e) {
+					mui.toast("播放失败");
+				});
+			}
+
+			// 停止播放
+			function stopPlayss() {
+				playerss.stop();
+				playerss = "";
+			}
+
+			function getvide(files) {
+				return files.remark + '"'
+			}
+
+			function open_video(video) {
+				startPlayss(video.fileUrl);
+			}
+
+			/*window.addEventListener('loadingAll', function(e) { //执行刷新
+				mui.toast('111111111111')
+			});*/
+		</script>
+	</body>
+
+</html>

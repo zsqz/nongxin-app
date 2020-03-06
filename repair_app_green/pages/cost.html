@@ -1,0 +1,588 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style>
+			.mui-bar {
+				height: 43px;
+				background-color: #12B482;
+			}
+			
+			.mui-title {
+				line-height: 44px;
+				color: white;
+				font-size: 17px;
+				letter-spacing: 5px;
+			}
+			
+			html {
+				height: 100%;
+			}
+			
+			body {
+				background-color: #efeff4;
+				height: 100%;
+			}
+			
+			a {
+				color: white;
+			}
+			
+			.mui-bar .mui-icon {
+				padding-top: 9px;
+			}
+			
+			.mui-button-row .btn {
+				height: 36px;
+				padding: 0;
+				width: 95%;
+				border-radius: 3px;
+				color: #fff;
+				margin-bottom: 5px;
+				background-color: #12b482;
+				border: 1px solid #12b482;
+				font-size: 18px;
+			}
+			
+			.table {
+				border: 1px solid #cad9ea;
+				color: #666;
+			}
+			
+			.table th {
+				background-repeat: repeat-x;
+				height: 30px;
+			}
+			
+			.table td,
+			.table th {
+				border: 1px solid black;
+			}
+			
+			.table tr.alter {
+				background-color: #f5fafe;
+			}
+			
+			td,
+			th {
+				padding: 0;
+				text-align: center;
+				font-size: 13px;
+				color: black;
+			}
+			
+			input[type=number] {
+				margin-bottom: 0px;
+				padding: 0px;
+				background-color: #efeff4;
+			}
+			
+			input::-webkit-input-placeholder,
+			textarea::-webkit-input-placeholder {
+				color: #666;
+				font-size: 12px;
+				text-align: center;
+			}
+			
+			input:-moz-placeholder,
+			textarea:-moz-placeholder {
+				color: #666;
+				font-size: 12px;
+				text-align: center;
+			}
+			
+			input::-moz-placeholder,
+			textarea::-moz-placeholder {
+				color: #666;
+				font-size: 12px;
+				text-align: center;
+			}
+			
+			input:-ms-input-placeholder,
+			textarea:-ms-input-placeholder {
+				color: #666;
+				font-size: 12px;
+				text-align: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title" id="taskstitle">费用信息</h1>
+		</header>
+		<div style="width: 100%;margin-top: 50px;padding: 5px 10px;margin-bottom: 60px;" id="costVue">
+			<div style="font-size: 15px;margin-bottom: 30px;" v-if="deviceActList!=[]&&deviceActList!=''">
+				<span>设备信息</span>
+				<div style="margin: 10px 0px;">
+					<span>请将对应设备或材料的<span style="color: red;">实际单价</span>和<span style="color: red;">实际使用数量</span>填入表格对应的条目中</span>
+				</div>
+				<table class="table" id="tablevalue01" style="width: 100%;">
+					<tr>
+						<td width="16.66%">名称</td>
+						<td width="16.66%">单位</td>
+						<td width="16.66%">计划单价</td>
+						<td width="16.66%">计划总量</td>
+						<td width="16.66%">实际单价</td>
+						<td width="16.66%">实际总量</td>
+					</tr>
+					<tr v-for="(datas,index) in deviceActList">
+						<td>{{datas.deviceName}}</td>
+						<td>{{datas.company}}</td>
+						<td>{{datas.preUnitPrice}}</td>
+						<td>{{datas.preUnitCount}}</td>
+						<td><input type="number" placeholder="请填写" v-model="datas.actUnitPrice"></td>
+						<td><input type="number" placeholder="请填写" v-model="datas.actUnitCount"></td>
+					</tr>
+				</table>
+			</div>
+			<div style="font-size: 15px;margin-bottom: 30px;" v-if="personnelActList!=[]&&personnelActList!=''">
+				<span>人员信息</span>
+				<div style="margin: 10px 0px;">
+					<span>请将对应角色的工作<span style="color: red;">实际总人天</span>填入表格对应的条目中</span>
+				</div>
+				<table class="table" id="tablevalue02" style="width: 100%;">
+					<tr>
+						<td width="20%">时间</td>
+						<td width="20%">计划人天数</td>
+						<td width="20%">计划工资(元/人天)</td>
+						<td width="20%">实际人天数</td>
+						<td width="20%">实际工资</td>
+					</tr>
+					<tr v-for="(datas,index) in personnelActList">
+						<td>{{datas.personName}}</td>
+						<td>{{datas.preUnitCount}}</td>
+						<td>{{datas.preUnitPrice}}</td>
+						<td><input type="number" placeholder="请填写" v-model="datas.actUnitCount"></td>
+						<td><input type="number" placeholder="请填写" v-model="datas.actUnitPrice"></td>
+					</tr>
+				</table>
+			</div>
+			<div style="font-size: 15px;" v-if="materialActList!=''&&materialActList!=[]">
+				<span>物料信息</span>
+				<div style="margin: 10px 0px;">
+					<span>请将对应设备或材料的<span style="color: red;">实际单价</span>和<span style="color: red;">实际使用数量</span>填入表格对应的条目中</span>
+				</div>
+				<table class="table" id="tablevalue03" style="width: 100%;">
+					<tr>
+						<td width="16.66%">名称</td>
+						<td width="16.66%">单位</td>
+						<td width="16.66%">计划单价</td>
+						<td width="16.66%">计划总量</td>
+						<td width="16.66%">实际单价</td>
+						<td width="16.66%">实际总量</td>
+					</tr>
+					<tr v-for="(datas,index) in materialActList">
+						<td>{{datas.materialName}}</td>
+						<td>{{datas.company}}</td>
+						<td>{{datas.preUnitPrice}}</td>
+						<td>{{datas.preUnitCount}}</td>
+						<td><input type="number" placeholder="请填写" class="numberbox" v-model="datas.actUnitPrice"></td>
+						<td><input type="number" placeholder="请填写" class="numberbox" v-model="datas.actUnitCount"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<nav class="mui-bar mui-bar-tab" style="background-color: white;">
+			<a class="mui-tab-item">
+				<div class="mui-button-row" id="commitAll">
+					<button type="button" class="btn">确定提交</button>
+				</div>
+				<div class="mui-button-row" id="iscommitAll" style="display: none;">
+					<button type="button" class="btn">修改</button>
+				</div>
+			</a>
+			<a class="mui-tab-item" href="javascript:;" id="nosave">
+				<div class="mui-button-row">
+					<button type="button" class="mui-action-back btn" style="background-color: white;border: 1px solid rgb(192, 192, 192);color: #696969;">取消</button>
+				</div>
+			</a>
+		</nav>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/libs/vue.min.js"></script>
+		<script type="text/javascript" src="../js/index.js"></script>
+		<script type="text/javascript" src="../js/libs/jquery-1.11.0.min.js"></script>
+		<script type="text/javascript">
+			var costVue = new Vue({
+				el: '#costVue',
+				data: {
+					//设备
+					deviceActList: [],
+					personnelActList: [],
+					materialActList: [],
+					isShows: true
+				}
+			});
+
+			mui.init();
+
+			var Lon = "";
+			var Lat = "";
+			var addr = "";
+			
+			var subimts = true;
+			var subimtss = true;
+			
+			var submitsss = true;
+
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				var onlyIds = localStorage.getItem("onlyId");
+				var contentss = self.textAll;
+				var removeImgAll = self.removeImgAll;
+				var removeAudioId = self.removeAudioId;
+				ajaxs(getOrderCosts + "?id=" + onlyIds, 'get').then(function(response) {
+					if(response.success) {
+						costVue.deviceActList = response.result.deviceActList;
+						costVue.materialActList = response.result.materialActList;
+						costVue.personnelActList = response.result.personnelActList;
+						console.log(JSON.parse(deviceActList));
+						console.log(JSON.parse(materialActList));
+						console.log(JSON.parse(personnelActList));
+					}
+				}).catch(function(error) {
+
+				})
+				var state = localStorage.getItem("state");
+				if(state != "UNEXECUTED") {
+					document.getElementById('iscommitAll').style.display = 'block';
+					document.getElementById('commitAll').style.display = 'none';
+					costVue.isShows = false;
+				} else {
+					document.getElementById('nosave').style.display = 'none';
+					Lon = self.Lon;
+					Lat = self.Lat;
+					console.log(Lon);
+					console.log(Lat);
+				}
+
+				/*document.getElementById('iscommitAll').addEventListener('tap', function() {
+					plus.webview.currentWebview().opener().opener().hide();
+					plus.webview.currentWebview().opener().hide();
+					plus.webview.currentWebview().opener().opener().close();
+					plus.webview.currentWebview().opener().close();
+					setTimeout(function() {
+						plus.webview.currentWebview().hide();
+						plus.webview.currentWebview().close();
+					}, 100);
+					mui.openWindow({
+						url: '../index.html',
+						id: '../index.html',
+						waiting: {
+							autoShow: false, //自动显示等待框，默认为true
+						}
+					});
+				})*/
+
+				document.getElementById('commitAll').addEventListener('tap', function() {
+					var ispost = true;
+					var tableArr01 = []; //存所有数据
+					var deviceActLists = [];
+					if(costVue.deviceActList != [] && costVue.deviceActList != '') {
+						var devAll = [];
+						for(let index in costVue.deviceActList) {
+							devAll.push(costVue.deviceActList[index].id);
+							devAll.push("-1");
+						}
+						$("#tablevalue01 tr:not(:first)").each(function() { //便利除标题行外所有行
+							var trArr = []; //存行数据
+							$("input:not(:button),select", this).each(function() {
+								if($(this).val() == '') {
+									mui.toast('设备信息未填写完成')
+									ispost = false;
+									return;
+								}
+								tableArr01.push($(this).val());
+							});
+						});
+
+						for(let i = 0; i < tableArr01.length; i += 2) {
+							deviceActLists.push({
+								actUnitCount: tableArr01[i + 1],
+								actUnitPrice: tableArr01[i],
+								actCal: tableArr01[i] * tableArr01[i + 1],
+								id: devAll[i]
+							});
+						}
+
+					}
+
+					var tableArr02 = []; //存所有数据
+					var personnelActLists = [];
+					if(costVue.personnelActList != [] && costVue.personnelActList != '') {
+						var perAll = [];
+						for(let index in costVue.personnelActList) {
+							perAll.push(costVue.personnelActList[index].id);
+							perAll.push("-1");
+						}
+
+						$("#tablevalue02 tr:not(:first)").each(function() { //便利除标题行外所有行
+							var trArr = []; //存行数据
+							$("input:not(:button),select", this).each(function() {
+								if($(this).val() == '') {
+									mui.toast('人员信息未填写完成')
+									ispost = false;
+									return;
+								}
+								tableArr02.push($(this).val());
+							});
+							/*tableArr02.push(trArr.join()); //行数据格式*/
+						});
+						for(let i = 0; i < tableArr02.length; i += 2) {
+							personnelActLists.push({
+								actUnitCount: tableArr02[i],
+								actUnitPrice: tableArr02[i + 1],
+								actCal: tableArr02[i] * tableArr02[i + 1],
+								id: perAll[i]
+							});
+						}
+
+					}
+					var tableArr03 = []; //存所有数据
+					var materialActLists = [];
+					if(costVue.materialActList != [] && costVue.materialActList != '') {
+						var materIdAll = [];
+						for(let index in costVue.materialActList) {
+							materIdAll.push(costVue.materialActList[index].id);
+							materIdAll.push("-1");
+						}
+
+						$("#tablevalue03 tr:not(:first)").each(function() { //便利除标题行外所有行
+							var trArr = []; //存行数据
+							$("input:not(:button),select", this).each(function() {
+								if($(this).val() == '') {
+									mui.toast('物料信息未填写完成')
+									ispost = false;
+									return;
+								}
+								tableArr03.push($(this).val());
+							});
+							/*tableArr03.push(trArr.join()); //行数据格式*/
+						});
+						for(let i = 0; i < tableArr03.length; i += 2) {
+							materialActLists.push({
+								actUnitCount: tableArr03[i + 1],
+								actUnitPrice: tableArr03[i],
+								actCal: tableArr03[i] * tableArr03[i + 1],
+								id: materIdAll[i]
+							});
+						}
+					}
+
+					var dataAll = {
+						id: onlyIds,
+						materialActList: materialActLists,
+						personnelActList: personnelActLists,
+						deviceActList: deviceActLists,
+						orderContent: {
+							content: contentss
+						}
+					}
+
+					if(ispost == true) {
+						var mask = mui.createMask(); //遮罩层
+						mask.show();
+						if(Lon != "" && Lat != "") {
+							dataAll.orderContent = {
+								content: contentss,
+								longitude: Lon,
+								latitude: Lat,
+							};
+						}
+						ajaxs(executingOrder, 'post', dataAll).then(function(response) {
+							subimts=false;
+							mui.toast(response.message);
+							if(response.success) {
+								var cPage = plus.webview.currentWebview().opener();　
+								var bPage = cPage.opener();　　
+								var aPage = bPage.opener();
+								//refresh是A页面自定义事件
+								mui.fire(aPage, 'refreshs');
+								mask.close();
+								/*mui.openWindow({
+									url: '../index.html',
+									id: '../index.html',
+									waiting: {
+										autoShow: false, //自动显示等待框，默认为true
+									}
+								});
+								setTimeout(function() {
+									plus.webview.currentWebview().hide();
+									plus.webview.currentWebview().close();
+								}, 1000);*/
+								plus.webview.currentWebview().opener().opener().hide();
+								plus.webview.currentWebview().opener().hide();
+								plus.webview.currentWebview().opener().opener().close();
+								plus.webview.currentWebview().opener().close();
+								setTimeout(function() {
+									plus.webview.currentWebview().hide();
+									plus.webview.currentWebview().close();
+								}, 100);
+							}else{
+								mask.close();
+							}
+						}).catch(function(error) {
+
+						})
+					}
+				})
+
+				document.getElementById('iscommitAll').addEventListener('tap', function() {
+					var ispost = true;
+					var tableArr01 = []; //存所有数据
+					var deviceActLists = [];
+					if(costVue.deviceActList != [] && costVue.deviceActList != '') {
+						var devAll = [];
+						for(let index in costVue.deviceActList) {
+							devAll.push(costVue.deviceActList[index].id);
+							devAll.push("-1");
+						}
+						$("#tablevalue01 tr:not(:first)").each(function() { //便利除标题行外所有行
+							var trArr = []; //存行数据
+							$("input:not(:button),select", this).each(function() {
+								if($(this).val() == '') {
+									mui.toast('设备信息未填写完成')
+									ispost = false;
+									return;
+								}
+								tableArr01.push($(this).val());
+							});
+						});
+
+						for(let i = 0; i < tableArr01.length; i += 2) {
+							deviceActLists.push({
+								actUnitCount: tableArr01[i + 1],
+								actUnitPrice: tableArr01[i],
+								actCal: tableArr01[i] * tableArr01[i + 1],
+								id: devAll[i]
+							});
+						}
+
+					}
+
+					var tableArr02 = []; //存所有数据
+					var personnelActLists = [];
+					if(costVue.personnelActList != [] && costVue.personnelActList != '') {
+						var perAll = [];
+						for(let index in costVue.personnelActList) {
+							perAll.push(costVue.personnelActList[index].id);
+							perAll.push("-1");
+						}
+
+						$("#tablevalue02 tr:not(:first)").each(function() { //便利除标题行外所有行
+							var trArr = []; //存行数据
+							$("input:not(:button),select", this).each(function() {
+								if($(this).val() == '') {
+									mui.toast('人员信息未填写完成')
+									ispost = false;
+									return;
+								}
+								tableArr02.push($(this).val());
+							});
+							/*tableArr02.push(trArr.join()); //行数据格式*/
+						});
+						for(let i = 0; i < tableArr02.length; i += 2) {
+							personnelActLists.push({
+								actUnitCount: tableArr02[i],
+								actUnitPrice: tableArr02[i + 1],
+								actCal: tableArr02[i] * tableArr02[i + 1],
+								id: perAll[i]
+							});
+						}
+
+					}
+					var tableArr03 = []; //存所有数据
+					var materialActLists = [];
+					if(costVue.materialActList != [] && costVue.materialActList != '') {
+						var materIdAll = [];
+						for(let index in costVue.materialActList) {
+							materIdAll.push(costVue.materialActList[index].id);
+							materIdAll.push("-1");
+						}
+
+						$("#tablevalue03 tr:not(:first)").each(function() { //便利除标题行外所有行
+							var trArr = []; //存行数据
+							$("input:not(:button),select", this).each(function() {
+								if($(this).val() == '') {
+									mui.toast('物料信息未填写完成')
+									ispost = false;
+									return;
+								}
+								tableArr03.push($(this).val());
+							});
+							/*tableArr03.push(trArr.join()); //行数据格式*/
+						});
+						for(let i = 0; i < tableArr03.length; i += 2) {
+							materialActLists.push({
+								actUnitCount: tableArr03[i + 1],
+								actUnitPrice: tableArr03[i],
+								actCal: tableArr03[i] * tableArr03[i + 1],
+								id: materIdAll[i]
+							});
+						}
+					}
+
+					var dataAll = {
+						id: onlyIds,
+						materialActList: materialActLists,
+						personnelActList: personnelActLists,
+						deviceActList: deviceActLists,
+						orderContent: {
+							content: contentss
+						}
+					}
+
+					if(removeImgAll.length > 0 && removeImgAll != '') {
+						for(var i = 0; i < removeImgAll.length; i++) {
+							ajaxs(pictureDelete + "?id=" + removeImgAll[i], 'get').then(function(response) {
+								if(response.success) {}
+							}).catch(function(error) {
+
+							})
+						}
+					}
+
+					if(removeAudioId != '') {
+						ajaxs(fileDelete + "?id=" + removeAudioId, 'get').then(function(response) {
+							
+						}).catch(function(error) {
+
+						})
+					}
+
+					if(ispost == true) {
+						plus.nativeUI.showWaiting();
+						ajaxs(executingOrder, 'post', dataAll).then(function(response) {
+							subimtss=false;
+							if(response.success) {
+								var cPage = plus.webview.currentWebview().opener();　
+								var bPage = cPage.opener();　　
+								var aPage = bPage.opener();
+								mui.toast('修改工单成功');
+								//refresh是A页面自定义事件
+								mui.fire(aPage, 'refreshs');
+								plus.nativeUI.closeWaiting();
+								plus.webview.currentWebview().opener().opener().hide();
+								plus.webview.currentWebview().opener().hide();
+								plus.webview.currentWebview().opener().opener().close();
+								plus.webview.currentWebview().opener().close();
+								setTimeout(function() {
+									plus.webview.currentWebview().hide();
+									plus.webview.currentWebview().close();
+								}, 100);
+							}
+						}).catch(function(error) {
+
+						})
+					}
+				})
+			})
+		</script>
+	</body>
+
+</html>

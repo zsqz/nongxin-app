@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/index.css" rel="stylesheet" />
+		<style>
+			.box-div {
+				width: 100%;
+				height: 50px;
+				line-height: 50px;
+				padding-left: 25px;
+				border-bottom: 1px solid #CFCFCF;
+			}
+			
+			.boxs-div {
+				width: 100%;
+				line-height: 50px;
+				padding-left: 25px;
+				border-bottom: 1px solid #CFCFCF;
+			}
+			
+			.collapse-div {
+				width: 100%;
+				height: 50px;
+				line-height: 50px;
+				padding-left: 3%;
+				border-bottom: 1px solid #CFCFCF;
+			}
+			
+			.mui-table-view-cell.mui-collapse .mui-collapse-content {
+				padding: 0px !important;
+			}
+			
+			.mui-bar {
+				box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+			}
+			
+			.logouts {
+				line-height: 43px;
+				color: white;
+				text-align: center;
+				letter-spacing: 5px;
+			}
+			
+			.box-div>img {
+				margin-right: 6px;
+				margin-top: -5px;
+			}
+			
+			.boxs-div>img {
+				margin-right: 6px;
+				margin-top: -5px;
+			}
+			
+			.roles {
+				margin-right: 6px;
+				float: left;
+			}
+			
+			.clearfix:after {
+				content: '\20';
+				display: block;
+				height: 0;
+				clear: both;
+				visibility: hidden;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">个人中心</h1>
+		</header>
+		<div style="background-color: white;margin-top: 45px;">
+			<div class="box-div">
+				<img src="../img/personalCen01.png" align="center">
+				<span style="color: #696969">姓名:&nbsp;&nbsp;</span>
+				<span id="name"></span>
+			</div>
+			<div class="boxs-div" id="roleList">
+				<img src="../img/personalCen02.png" align="center">
+				<span style="color:	#696969">职务:&nbsp;&nbsp;</span>
+				<div style="margin-top: -50px;margin-left: 78px;" class="clearfix">
+					<div v-for="v in roleListAll" class='roles'>{{v.name}}</div>
+				</div>
+			</div>
+			<div class="box-div">
+				<img src="../img/personalCen03.png" align="center">
+				<span style="color: #696969">性别:&nbsp;&nbsp;</span>
+				<span id="displayName"></span>
+			</div>
+			<div class="box-div">
+				<img src="../img/personalCen04.png" align="center">
+				<span style="color:	#696969">联系方式:&nbsp;&nbsp;</span>
+				<span id="phone"></span>
+			</div>
+			<div class="box-div" style="border: 0px;position: relative;" id="passWor">
+				<img src="../img/personalCen05.png" align="center">
+				<span style="color:	#696969;">修改密码</span>
+				<span class="mui-icon mui-icon-arrowright" style="top:50%;transform: translate(-50%, -50%);position: absolute;right: 0px;color:	#696969"></span>
+			</div>
+		</div>
+		<div id="logouts">
+			<nav class="mui-bar mui-bar-tab logouts">
+				<span>退出登录</span>
+			</nav>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/libs/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../js/index.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			var roleList = new Vue({
+				el: '#roleList',
+				data: {
+					roleListAll: [],
+				}
+			});
+			mui('#logouts').on('tap', 'nav', function() {
+				
+				var userid = localStorage.getItem('userid')
+				var cid = localStorage.getItem('cid')
+				ajaxs(deleteCid+ "?userId=" + userid +"&cid=" + cid, 'get').then(function(response) {
+					
+				}).catch(function(error) {
+
+				})
+				
+				ajaxs(logout, 'get').then(function(response) {
+					if(response.success) {
+						var isupdaapp = localStorage.getItem("noudapp");
+						localStorage.clear();
+						localStorage.setItem('noudapp', isupdaapp);
+						mui.toast(response.message);
+						mui.openWindow({
+							url: '../login.html',
+							id: '../login'
+						});
+						plus.webview.currentWebview().opener().hide();
+						plus.webview.currentWebview().opener().close();
+						setTimeout(function() {
+							plus.webview.currentWebview().hide();
+							plus.webview.currentWebview().close();
+						}, 100);
+						plus.nativeUI.closeWaiting();
+					}
+				}).catch(function(error) {
+
+				})
+			})
+			mui.plusReady(function() {
+				ajaxs(getUserInfo, 'get').then(function(response) {
+					var result = response.result
+					var name = window.document.getElementById("name");
+					name.innerHTML = result.realName;
+					roleList.roleListAll = result.roleList;
+					var displayName = window.document.getElementById("displayName");
+					displayName.innerHTML = result.sex.displayName;
+					var phone = window.document.getElementById("phone");
+					phone.innerHTML = result.phone;
+				}).catch(function(error) {
+
+				})
+
+				document.getElementById('passWor').addEventListener('tap', function() {
+					mui.openWindow({
+						url: 'changePass.html',
+						id: 'changePass'
+					});
+				})
+			})
+		</script>
+	</body>
+
+</html>

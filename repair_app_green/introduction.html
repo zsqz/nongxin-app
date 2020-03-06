@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			var toMain = function() {
+				//使用定时器的原因：
+				//可能执行太快，main页面loaded事件尚未触发就执行自定义事件，此时必然会失败
+				var id = setInterval(function() {
+					mui.openWindow({
+						url: 'index.html',
+						id: 'index',
+						show: {
+							aniShow: 'none'
+						},
+						waiting: {
+							autoShow: false
+						}
+					})
+				}, 100);
+			};
+
+			var tologin = function() {
+				//使用定时器的原因：
+				//可能执行太快，main页面loaded事件尚未触发就执行自定义事件，此时必然会失败
+				var id = setInterval(function() {
+					mui.openWindow({
+						url: 'login.html',
+						id: 'login',
+						show: {
+							aniShow: 'none'
+						},
+						waiting: {
+							autoShow: false
+						}
+					})
+				}, 100);
+			};
+
+			mui.init();
+			var istokens = localStorage.getItem("tokens");
+				if(istokens != null) {
+					toMain();
+				} else {
+					tologin();
+				}
+		</script>
+	</body>
+
+</html>
