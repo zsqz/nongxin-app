@@ -13,7 +13,7 @@
 </script>
 
 
-<style>
+<style>1
 	/*每个页面公共css */
 	@import "/common/index.css";
 	@import "/common/uni.css";
