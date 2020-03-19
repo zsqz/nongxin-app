@@ -1,0 +1,146 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/login/login",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}, {
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		}, {
+			"path": "pages/action/action",
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleView": false
+				}
+			}
+		}, {
+			"path": "pages/mycard/mycard",
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleView": false
+				}
+			}
+		}, {
+			"path": "pages/plant/plandetails",
+			"style": {
+				"navigationBarTitleText": "详情"
+			}
+		}, {
+			"path": "pages/plant/plandetailsAll",
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleView": false
+				}
+			}
+		}, {
+			"path": "pages/plant/tasks",
+			"style": {
+				"navigationBarTitleText": "工单"
+			}
+		}, {
+			"path": "pages/envcon/envControl",
+			"style": {
+				"navigationBarTitleText": "环控中心"
+			}
+		}, {
+			"path": "pages/survey/survey",
+			"style": {
+				"navigationBarTitleText": "调查任务"
+			}
+		}, {
+			"path": "pages/survey/pestdiag",
+			"style": {
+				"navigationBarTitleText": "反馈详情"
+			}
+		}, {
+			"path": "pages/survey/addpestDiag",
+			"style": {
+				"navigationBarTitleText": "添加反馈"
+			}
+		}, {
+			"path": "pages/warning/warning",
+			"style": {
+				"navigationBarTitleText": "预警任务"
+			}
+		}, {
+			"path": "pages/warning/warnshow",
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleView": false
+				}
+			}
+		},{
+            "path" : "pages/weather/weather",
+            "style": {
+            	"navigationStyle": "custom",
+            	"app-plus": {
+            		"titleView": false
+            	}
+            }
+        },{
+            "path" : "pages/weather/selectCity",
+            "style": {
+            	"navigationBarTitleText": "城市列表"
+            }
+        },{
+            "path" : "pages/mycard/changepass",
+            "style": {
+            	"navigationBarTitleText": "修改密码"
+            }
+        },{
+            "path" : "pages/mycard/personalCen",
+            "style": {
+            	"navigationBarTitleText": "个人资料"
+            }
+        },{
+            "path" : "pages/mycard/version",
+            "style": {
+            	"navigationBarTitleText": "更新日志"
+            }
+        },{
+            "path" : "pages/action/testsss",
+            "style": {
+            	"navigationBarTitleText": "视频监控"
+            }
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "",
+		"navigationBarBackgroundColor": "#FBD855",
+		"backgroundColor": "#f8f8f8"
+	},
+	"tabBar": {
+		"fontSize": "12px",
+		"color": "#000000",
+		"selectedColor": "#FBD855",
+		"borderStyle": "black",
+		"backgroundColor": "#FFFFFF",
+		"list": [{
+			"pagePath": "pages/index/index",
+			"text": "首页",
+			"iconPath": "static/tabbar/index.png",
+			"selectedIconPath": "static/tabbar/indexSelected.png"
+		}, {
+			"pagePath": "pages/action/action",
+			"text": "功能",
+			"iconPath": "static/tabbar/action.png",
+			"selectedIconPath": "static/tabbar/actionSelected.png"
+		}, {
+			"pagePath": "pages/mycard/mycard",
+			"text": "我的",
+			"iconPath": "static/tabbar/mycard.png",
+			"selectedIconPath": "static/tabbar/mycardSelected.png"
+		}]
+	}
+}

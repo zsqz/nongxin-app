@@ -1,0 +1,16 @@
+button:after {
+	border: 0rpx;
+}
+image{will-change: transform}
+page{
+	height: 100%;
+	font-size: 28rpx;
+	background: #F4F5F9;
+}
+/* 主色调 */
+/* 主背景颜色（橙色）*/
+.main-bg-color{ background: #FBD855 !important; }
+/* 主字体颜色（橙色）*/
+.main-text-color{color: #FBD855;}
+/* 主边框颜色 */
+.main-border-color{ border-bottom-color: #FBD855; }
